@@ -1,0 +1,289 @@
+{
+  "timestamp": "2026-10-26T05:20:46.936Z",
+  "browser": "Microsoft Edge / Playwright",
+  "captures": [
+    {
+      "filename": "03-street.png",
+      "view": "street",
+      "look": "afternoon",
+      "hash": 1577117285,
+      "meanBrightness": 75.7260027649177,
+      "width": 1920,
+      "height": 1080,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "filename": "03-macro.png",
+      "view": "macro",
+      "look": "afternoon",
+      "hash": 503085443,
+      "meanBrightness": 74.28177147633745,
+      "width": 1920,
+      "height": 1080,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "filename": "03-overcast.png",
+      "view": "street",
+      "look": "overcast",
+      "hash": 3794074808,
+      "meanBrightness": 85.55083574459877,
+      "width": 1920,
+      "height": 1080,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "filename": "03-evening.png",
+      "view": "street",
+      "look": "evening",
+      "hash": 4259072776,
+      "meanBrightness": 50.98412149562757,
+      "width": 1920,
+      "height": 1080,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "filename": "03-overhead.png",
+      "view": "overhead",
+      "look": "afternoon",
+      "hash": 4195323368,
+      "meanBrightness": 65.108225469393,
+      "width": 1920,
+      "height": 1080,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "filename": "03-motion-0.png",
+      "view": "street",
+      "look": "afternoon",
+      "hash": 106301677,
+      "meanBrightness": 68.94154771090535,
+      "width": 1920,
+      "height": 1080,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "filename": "03-motion-4.png",
+      "view": "street",
+      "look": "afternoon",
+      "hash": 860396546,
+      "meanBrightness": 74.9985273598251,
+      "width": 1920,
+      "height": 1080,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "filename": "03-motion-8.png",
+      "view": "street",
+      "look": "afternoon",
+      "hash": 1031633623,
+      "meanBrightness": 72.74842110339506,
+      "width": 1920,
+      "height": 1080,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "filename": "03-played.png",
+      "view": "aim",
+      "look": "afternoon",
+      "hash": 1577262695,
+      "meanBrightness": 69.23467238940329,
+      "width": 1920,
+      "height": 1080,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "filename": "03-mobile.png",
+      "view": "street",
+      "look": "afternoon",
+      "hash": 2274410504,
+      "meanBrightness": 82.88733442702637,
+      "width": 390,
+      "height": 844,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ],
+  "checks": {
+    "desktopLayout": {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "issues": [],
+      "marbles": [
+        {
+          "index": 0,
+          "visible": true,
+          "x": 835.3341378456694,
+          "y": 712.21500985562,
+          "radius": 56.470104742955286
+        },
+        {
+          "index": 1,
+          "visible": true,
+          "x": 928.1186411892527,
+          "y": 553.8919427148669,
+          "radius": 25.9164760777935
+        },
+        {
+          "index": 2,
+          "visible": true,
+          "x": 1020.7965934213569,
+          "y": 549.7579423405169,
+          "radius": 24.421497009739927
+        },
+        {
+          "index": 3,
+          "visible": true,
+          "x": 992.3203137466917,
+          "y": 534.8305323761457,
+          "radius": 25.393752484173383
+        },
+        {
+          "index": 4,
+          "visible": true,
+          "x": 857.8417873298786,
+          "y": 539.0619872946858,
+          "radius": 22.22240000157003
+        },
+        {
+          "index": 5,
+          "visible": true,
+          "x": 1137.5338747266112,
+          "y": 540.6855371049853,
+          "radius": 24.276740798701532
+        },
+        {
+          "index": 6,
+          "visible": true,
+          "x": 1066.000495120888,
+          "y": 578.4228785840045,
+          "radius": 25.633290271826166
+        },
+        {
+          "index": 7,
+          "visible": true,
+          "x": 772.0309033763793,
+          "y": 572.0715708654637,
+          "radius": 27.084939575543668
+        }
+      ]
+    },
+    "temporalStability": {
+      "stationaryHashes": [
+        1452357414,
+        1452357414,
+        1452357414
+      ],
+      "motionHashes": [
+        106301677,
+        3612040494,
+        1922709220,
+        1492867077,
+        860396546,
+        3139602011,
+        1665764293,
+        4276889139,
+        1031633623
+      ],
+      "immediateReturn": 1452357414,
+      "settledReturn": 1452357414,
+      "passed": true
+    },
+    "motionRecording": {
+      "filename": "03-motion.webm",
+      "bytes": 4204422,
+      "durationSeconds": 4.5,
+      "mimeType": "video/webm;codecs=vp9",
+      "observedPerformance": {
+        "fps": 126.70925505517143,
+        "p95Milliseconds": 18.5,
+        "frames": 240
+      }
+    },
+    "mouseFlick": {
+      "active": false,
+      "mode": "practice",
+      "shots": 1,
+      "score": 1,
+      "total": 7,
+      "roundOver": false,
+      "won": false
+    },
+    "mobileLayout": {
+      "viewport": [
+        390,
+        844
+      ],
+      "issues": [],
+      "marbles": [
+        {
+          "index": 0,
+          "visible": true,
+          "x": 153.35956758506683,
+          "y": 479.52262371436126,
+          "radius": 18.86193653481696
+        },
+        {
+          "index": 1,
+          "visible": true,
+          "x": 180.69786222397775,
+          "y": 428.231995313125,
+          "radius": 11.626261406669894
+        },
+        {
+          "index": 2,
+          "visible": true,
+          "x": 222.55571420066173,
+          "y": 426.4227325116438,
+          "radius": 11.06890623441267
+        },
+        {
+          "index": 3,
+          "visible": true,
+          "x": 210.032998144963,
+          "y": 419.5955494179631,
+          "radius": 11.811278720253899
+        },
+        {
+          "index": 4,
+          "visible": true,
+          "x": 147.57499247086025,
+          "y": 421.5645454393804,
+          "radius": 10.316326605998372
+        },
+        {
+          "index": 5,
+          "visible": true,
+          "x": 276.84842061990054,
+          "y": 422.3160530879293,
+          "radius": 11.192302850553306
+        },
+        {
+          "index": 6,
+          "visible": true,
+          "x": 240.55009433712027,
+          "y": 438.5109204651276,
+          "radius": 11.015031474342504
+        },
+        {
+          "index": 7,
+          "visible": true,
+          "x": 113.53576610413596,
+          "y": 435.899550496981,
+          "radius": 11.738386214918721
+        }
+      ]
+    },
+    "touchFlick": {
+      "active": false,
+      "mode": "practice",
+      "shots": 1,
+      "score": 1,
+      "total": 7,
+      "roundOver": false,
+      "won": false
+    }
+  },
+  "errors": []
+}

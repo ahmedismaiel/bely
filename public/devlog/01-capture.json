@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-10-26T04:30:11.930Z",
+  "captures": [
+    {
+      "filename": "01-street.png",
+      "view": "street",
+      "hash": 2651442687,
+      "meanBrightness": 71.19273791666667,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "filename": "01-macro.png",
+      "view": "macro",
+      "hash": 2124034132,
+      "meanBrightness": 57.44520145833334,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ],
+  "errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "failure": "Error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+}

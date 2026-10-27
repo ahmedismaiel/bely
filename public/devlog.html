@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BELY / Photo Dev Log</title>
+  <link rel="icon" href="/bely.svg" type="image/svg+xml">
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme = param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; letter-spacing: 0; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--cp-bg); color: var(--cp-text); font: 15px/1.65 "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; }
+    a { color: var(--cp-link); text-underline-offset: 3px; }
+    button, input, textarea { font: inherit; }
+    button, a, input { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--cp-accent); outline-offset: 4px; }
+    header { border-bottom: 1px solid var(--cp-border); background: var(--cp-bg-elevated); }
+    .header-inner { max-width: 1160px; margin: auto; padding: 21px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { text-decoration: none; color: var(--cp-text); font-size: 23px; font-weight: 700; border-left: 3px solid var(--cp-accent); padding-left: 13px; white-space: nowrap; }
+    .brand span { font-weight: 400; font-size: 11px; margin-left: 14px; text-transform: uppercase; color: var(--cp-text-soft); }
+    .command { display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--cp-border-strong); border-radius: 5px; padding: 8px 14px; background: var(--cp-surface); color: var(--cp-text); text-decoration: none; font-size: 12px; min-height: 38px; }
+    .command.primary { background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent); }
+    main { max-width: 1160px; margin: auto; padding: 38px 24px 64px; }
+    .intro { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: end; margin-bottom: 24px; }
+    .kicker { margin: 0 0 7px; font: 11px Consolas, "Courier New", monospace; text-transform: uppercase; color: var(--cp-accent); }
+    h1 { font-size: 32px; line-height: 1.15; font-weight: 600; margin: 0; }
+    .intro p:not(.kicker) { margin: 10px 0 0; color: var(--cp-text-soft); font-size: 14px; max-width: 680px; }
+    .build-state { font-size: 11px; color: var(--cp-success); white-space: nowrap; }
+    .build-state::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--cp-success); margin-right: 7px; }
+    figure { margin: 0; }
+    figure img, video { display: block; width: 100%; height: auto; background: var(--cp-surface); }
+    .wide img, video { aspect-ratio: 16 / 9; object-fit: contain; }
+    .wide a { display: block; }
+    figcaption { display: flex; justify-content: space-between; gap: 18px; padding: 10px 0; color: var(--cp-text-soft); font-size: 11px; line-height: 1.5; }
+    figcaption strong { color: var(--cp-text); font-weight: 500; }
+    .review-strip { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 0; border-top: 1px solid var(--cp-border); border-bottom: 1px solid var(--cp-border); margin: 14px 0 0; }
+    fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+    .verdict legend { float: left; margin-right: 20px; font-size: 12px; line-height: 32px; color: var(--cp-text-soft); }
+    .verdict label { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; min-height: 32px; margin-right: 16px; }
+    input[type="radio"], input[type="checkbox"] { accent-color: var(--cp-accent); }
+    .saved { font-size: 11px; color: var(--cp-text-soft); }
+    .jump-links { display: flex; flex-wrap: wrap; gap: 8px 23px; padding: 22px 0 0; font-size: 12px; }
+    .jump-links a { color: var(--cp-text-soft); text-decoration: none; border-bottom: 1px solid var(--cp-border); }
+    section { padding-top: 44px; scroll-margin-top: 22px; }
+    .section-heading { display: flex; align-items: baseline; gap: 17px; margin-bottom: 15px; }
+    .index { font: 11px Consolas, "Courier New", monospace; color: var(--cp-accent); }
+    h2 { font-size: 23px; font-weight: 500; margin: 0; line-height: 1.3; }
+    h3 { font-size: 15px; font-weight: 600; margin: 16px 0 6px; }
+    p { margin: 0 0 13px; }
+    .prose { max-width: 790px; color: var(--cp-text-soft); font-size: 14px; }
+    .comparison { position: relative; aspect-ratio: 8 / 5; overflow: hidden; background: var(--cp-surface); }
+    .comparison img { width: 100%; height: 100%; object-fit: cover; }
+    .comparison .after { position: absolute; inset: 0; clip-path: inset(0 0 0 50%); }
+    .comparison::after { content: ''; position: absolute; top: 0; bottom: 0; width: 2px; left: var(--split, 50%); background: var(--cp-accent); }
+    .comparison-label { position: absolute; bottom: 13px; padding: 5px 10px; background: var(--cp-panel-strong); font-size: 10px; text-transform: uppercase; }
+    .comparison-label.before-label { left: 13px; }
+    .comparison-label.after-label { right: 13px; }
+    .compare-control { display: flex; align-items: center; gap: 18px; padding: 12px 0; font-size: 11px; color: var(--cp-text-soft); }
+    .compare-control input { flex: 1; min-width: 60px; accent-color: var(--cp-accent); }
+    .facts { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--cp-border); border-bottom: 1px solid var(--cp-border); margin: 19px 0; }
+    .fact { padding: 16px 16px 16px 0; }
+    .fact strong { display: block; font-size: 23px; font-weight: 500; line-height: 1.3; }
+    .fact span { font-size: 11px; color: var(--cp-text-soft); }
+    .fact .pass { color: var(--cp-success); }
+    .motion-frames { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; }
+    .motion-frames img { aspect-ratio: 16 / 9; }
+    .tabs { display: flex; gap: 4px; margin: 18px 0 12px; }
+    .tabs button { border: 1px solid var(--cp-border); border-radius: 4px; background: var(--cp-surface); color: var(--cp-text-soft); padding: 8px 14px; font-size: 12px; min-height: 37px; }
+    .tabs button[aria-selected="true"] { background: var(--cp-accent-soft); border-color: var(--cp-accent); color: var(--cp-accent); }
+    .play-pair { display: grid; grid-template-columns: 1fr 215px; align-items: start; gap: 20px; }
+    .play-pair .phone img { aspect-ratio: 390 / 844; }
+    .play-pair .desktop img { aspect-ratio: 16 / 9; }
+    details { border-top: 1px solid var(--cp-border); padding: 15px 0; }
+    details:last-of-type { border-bottom: 1px solid var(--cp-border); }
+    summary { cursor: pointer; font-size: 14px; font-weight: 500; }
+    details p, details ul { margin-top: 13px; color: var(--cp-text-soft); font-size: 13px; }
+    li { margin: 7px 0; }
+    .history { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .history th, .history td { text-align: left; border-bottom: 1px solid var(--cp-border); padding: 13px 16px 13px 0; vertical-align: top; }
+    .history th { font-weight: 500; color: var(--cp-text-soft); }
+    .history td:first-child { color: var(--cp-accent); font-family: Consolas, "Courier New", monospace; width: 65px; }
+    .review-form { margin-top: 18px; }
+    .review-form > label { display: block; font-size: 12px; margin: 20px 0 7px; }
+    textarea { display: block; width: 100%; min-height: 106px; resize: vertical; background: var(--cp-surface); color: var(--cp-text); border: 1px solid var(--cp-border-strong); border-radius: 5px; padding: 13px; font-size: 14px; line-height: 1.6; }
+    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; margin: 16px 0; }
+    .options label { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; }
+    .options input { margin-top: 5px; }
+    .review-actions { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 17px; }
+    .sources { display: flex; flex-wrap: wrap; gap: 7px 20px; font-size: 12px; }
+    footer { border-top: 1px solid var(--cp-border); padding: 22px 0 0; margin-top: 40px; color: var(--cp-text-soft); font-size: 11px; }
+    code { font: 12px Consolas, "Courier New", monospace; color: var(--cp-text); overflow-wrap: anywhere; }
+    @media (max-width: 650px) {
+      .header-inner { padding: 16px; gap: 10px; }
+      .brand { font-size: 21px; padding-left: 10px; }
+      .brand span { display: none; }
+      main { padding: 25px 16px 40px; }
+      .intro { grid-template-columns: 1fr; gap: 12px; }
+      h1 { font-size: 27px; }
+      h2 { font-size: 21px; }
+      .facts { grid-template-columns: 1fr 1fr; }
+      .fact strong { font-size: 21px; }
+      .fact { padding: 12px 0; }
+      .play-pair { grid-template-columns: 1fr; }
+      .play-pair .phone { max-width: 245px; margin: auto; }
+      .motion-frames { gap: 6px; }
+      .motion-frames figcaption { font-size: 9px; }
+      .verdict legend { float: none; margin: 0; }
+      .verdict label { margin-right: 11px; font-size: 11px; }
+      .tabs button { padding: 8px 10px; font-size: 11px; }
+      .options { grid-template-columns: 1fr; }
+      .history { font-size: 11px; }
+      .history td, .history th { padding-right: 9px; }
+      figcaption { flex-direction: column; gap: 3px; }
+      .review-actions { flex-wrap: wrap; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <header><div class="header-inner"><a class="brand" href="/">BELY <span>Development log</span></a><a class="command primary" href="/?scoutTheme=dark">Play the build</a></div></header>
+  <main>
+    <div class="intro">
+      <div><p class="kicker">Browser study 01 / Checkpoint 03</p><h1>Glass, dust, and a playable street.</h1><p>The first browser slice of Egyptian street marbles. Every image below is captured from the running build, not concept art or an offline render.</p></div>
+      <span class="build-state">Ready for your review</span>
+    </div>
+    <figure class="wide"><a href="/devlog/03-street.png"><img src="/devlog/03-street.png" width="1920" height="1080" alt="The playable Bely street with scanned materials, blue shooter, chalk circle, and shot controls"></a><figcaption><strong>Checkpoint 03 / After school</strong><span>Live WebGL 2 frame. 1920 x 1080. RTX 3080 Ti.</span></figcaption></figure>
+    <div class="review-strip"><fieldset class="verdict"><legend>Your verdict</legend><label><input type="radio" name="verdict" value="approve">Approve direction</label><label><input type="radio" name="verdict" value="rework">Needs work</label><label><input type="radio" name="verdict" value="alternative">Propose another direction</label></fieldset><output class="saved" id="save-status">Not reviewed</output></div>
+    <nav class="jump-links" aria-label="Dev log sections"><a href="#glass">The glass</a><a href="#motion">In motion</a><a href="#lighting">Lighting options</a><a href="#play">Playable loop</a><a href="#engineering">What is real</a><a href="#review">Your notes</a></nav>
+
+    <section id="glass">
+      <div class="section-heading"><span class="index">01</span><h2>The glass, before and after</h2></div>
+      <p class="prose">The first pass established reflection and inverted refraction. The second narrowed the coloured ribbons, replaced prominent placeholder props with Poly Haven scans, adjusted the sun, and reduced the pale pebble scatter. Both images use the same close-up camera.</p>
+      <figure><div class="comparison" id="comparison"><img src="/devlog/01-macro.png" width="1600" height="1000" alt="Checkpoint 01: first glass shader with broader ribbons and placeholder street props" loading="lazy"><img class="after" id="after-image" src="/devlog/02-macro.png" width="1600" height="1000" alt="Checkpoint 02: finer ribbons, improved sunlight, and scanned street props" loading="lazy"><span class="comparison-label before-label">01 / First pass</span><span class="comparison-label after-label">02 / Material pass</span></div><label class="compare-control">First pass<input id="comparison-slider" aria-label="Before and after comparison" type="range" min="0" max="100" value="50">Material pass</label></figure>
+      <figure class="wide"><a href="/devlog/03-macro.png"><img src="/devlog/03-macro.png" width="1920" height="1080" alt="Current close-up of the blue glass shooter, with reflected buildings and internal coloured ribbons" loading="lazy"></a><figcaption><strong>Current close-up / Checkpoint 03</strong><span>Bounded, deterministic reflection and refraction rays. No accumulated samples.</span></figcaption></figure>
+    </section>
+
+    <section id="motion">
+      <div class="section-heading"><span class="index">02</span><h2>Judge it while it moves.</h2></div>
+      <p class="prose">A 4.5-second camera orbit recorded directly from the canvas at 30 fps. The game renders independently of the recording frame rate. This is not a sequence of converged still images.</p>
+      <video id="motion-video" controls muted playsinline preload="metadata" poster="/devlog/03-motion-4.png" width="1920" height="1080"><source src="/devlog/03-motion.webm" type="video/webm">Your browser cannot play WebM. The motion frames below remain available.</video>
+      <div class="facts"><div class="fact"><strong class="pass">Identical</strong><span>First frame on returning to the same camera</span></div><div class="fact"><strong>0</strong><span>Accumulated frames required</span></div><div class="fact"><strong>~127 fps</strong><span>Observed during this desktop capture</span></div><div class="fact"><strong>18.5 ms</strong><span>95th percentile frame time in that sample</span></div></div>
+      <p class="prose">The test compared raw framebuffer hashes at rest, moved through nine camera positions, then returned to the original pose. The first returned frame and the later settled frame matched exactly. This demonstrates no progressive-sampling grain in the tested scene; it does not prove the absence of every possible edge or texture alias.</p>
+      <p class="prose">Performance is one short Playwright/Edge observation at 1920 x 1080 on this RTX 3080 Ti, not a guaranteed minimum or a phone benchmark. <a href="/devlog/03-capture.json">Read the raw capture report</a>.</p>
+      <div class="motion-frames"><figure><a href="/devlog/03-motion-0.png"><img src="/devlog/03-motion-0.png" width="1920" height="1080" alt="First camera-motion checkpoint" loading="lazy"></a><figcaption>Motion checkpoint A</figcaption></figure><figure><a href="/devlog/03-motion-4.png"><img src="/devlog/03-motion-4.png" width="1920" height="1080" alt="Middle camera-motion checkpoint" loading="lazy"></a><figcaption>Motion checkpoint B</figcaption></figure><figure><a href="/devlog/03-motion-8.png"><img src="/devlog/03-motion-8.png" width="1920" height="1080" alt="Final camera-motion checkpoint" loading="lazy"></a><figcaption>Motion checkpoint C</figcaption></figure></div>
+    </section>
+
+    <section id="lighting">
+      <div class="section-heading"><span class="index">03</span><h2>Three moods, one street</h2></div>
+      <p class="prose">After school is the proposed lead look. Soft daylight is calmer and makes surfaces easier to read. Blue hour brings warm practical lights against a cooler street. These are lighting studies, not three completed levels.</p>
+      <div class="tabs" role="tablist" aria-label="Lighting photographs"><button role="tab" id="tab-afternoon" aria-controls="lighting-panel" aria-selected="true" data-photo="afternoon">After school</button><button role="tab" id="tab-overcast" aria-controls="lighting-panel" aria-selected="false" tabindex="-1" data-photo="overcast">Soft daylight</button><button role="tab" id="tab-evening" aria-controls="lighting-panel" aria-selected="false" tabindex="-1" data-photo="evening">Blue hour</button></div>
+      <figure class="wide" id="lighting-panel" role="tabpanel" aria-labelledby="tab-afternoon"><a id="lighting-link" href="/devlog/03-street.png"><img id="lighting-image" src="/devlog/03-street.png" width="1920" height="1080" alt="After school: sunlit scanned ground and cool painted shutters" loading="lazy"></a><figcaption><strong id="lighting-caption">After school / Proposed lead look</strong><span>Change lighting in the live build to compare from any angle.</span></figcaption></figure>
+    </section>
+
+    <section id="play">
+      <div class="section-heading"><span class="index">04</span><h2>A small, complete loop</h2></div>
+      <p class="prose">Pull the blue marble back and release, or set aim and power and press Flick. Knock targets fully beyond the chalk circle. Solo practice has no shot limit; Seven shots ends after seven flicks. New round restores the board.</p>
+      <div class="play-pair"><div><figure class="desktop"><a href="/devlog/03-played.png"><img src="/devlog/03-played.png" width="1920" height="1080" alt="The game after a real mouse flick, with one marble collected and the next turn ready" loading="lazy"></a><figcaption><strong>Real mouse input / One marble collected</strong></figcaption></figure><p class="prose">Cannon-es handles rigid-body collisions at a fixed 240 Hz simulation step. The camera remains usable while marbles roll. Contact sounds are synthesized, not field recordings.</p><p class="prose">Drag empty ground to orbit; use the wheel or pinch to zoom. Camera buttons provide street, aim, overhead, and macro views. Space flicks, R resets, and H hides the interface. Escape or a double-click restores it. Settings contain match mode, resolution, sound, depth of field, and exposure.</p><p class="prose">Mouse and real emulated touch drags both scored and returned to a settled next turn. The mobile image is a 390 x 844 desktop-GPU emulation; physical-phone performance remains untested.</p></div><figure class="phone"><a href="/devlog/03-mobile.png"><img src="/devlog/03-mobile.png" width="390" height="844" alt="Portrait mobile layout with the arena in frame and accessible touch controls" loading="lazy"></a><figcaption>Portrait / 390 x 844</figcaption></figure></div>
+    </section>
+
+    <section id="engineering">
+      <div class="section-heading"><span class="index">05</span><h2>What is real, and what is approximated</h2></div>
+      <details open><summary>Actual ray tracing, without a progressive path tracer</summary><p>The marble shader analytically intersects spheres and the ground, splits reflection and refraction paths, and uses Fresnel weighting and distance-based absorption. Coloured interiors use fixed-step volume sampling. The shader has a bounded ray budget and no per-frame random sampling or temporal accumulation.</p><p>This is GPU shader ray tracing through WebGL 2, not direct access to RTX hardware ray-tracing cores, and not full-scene Monte Carlo path tracing.</p></details>
+      <details><summary>The street, lighting, and caustic tradeoffs</summary><p>The street is rasterized with Three.js PBR materials, a Poly Haven HDR environment, shadow maps, and deterministic spatial depth of field. A local cubemap captures the static street for reflected and transmitted surroundings. It updates when the lighting preset changes; distant reflected architecture is not ray-intersected triangle by triangle.</p><p>The small pools of concentrated light beneath the glass are analytic approximations, not photon-traced caustics. Diffuse bounce lighting is approximated by the HDR environment and fill lights. The soil scan has surface normals, but its physical collision surface is flat; the displacement map is downloaded for a later terrain pass and is not applied in this checkpoint.</p></details>
+      <details><summary>What is not finished</summary><p>This is one authored visual/gameplay slice, not a finished AAA game. There are no animated hands, characters, opponent AI, multiplayer, campaign, or recorded Egyptian street ambience yet. Buildings still mix procedural geometry with scanned materials and props. Macro reflections can expose limited cubemap resolution and aliasing. The rules are a proposed circle-knockout adaptation, not a claim about every Egyptian neighborhood's rules.</p><p>The first priority for the next art pass would be stronger ground microgeometry and more distinctive, reference-led architecture, followed by a convincing finger-flick animation and authentic sound.</p></details>
+      <details><summary>Sources, credits, and reproducibility</summary><p>All environment assets listed below are locally downloaded Poly Haven CC0 assets. The manifest records source URLs, resolution, byte size, and checksums. The shader implementation is original; the linked ray-tracing projects informed the technique choice, and their source code was not copied.</p><div class="sources"><a href="https://polyhaven.com/a/brown_mud_02">Brown mud 02</a><a href="https://polyhaven.com/a/plastered_wall_02">Plastered wall 02</a><a href="https://polyhaven.com/a/aerial_asphalt_01">Aerial asphalt 01</a><a href="https://polyhaven.com/a/kloppenheim_06_puresky">Kloppenheim sky</a><a href="https://polyhaven.com/a/potted_plant_02">Potted plant 02</a><a href="https://polyhaven.com/a/painted_wooden_chair_02">Painted wooden chair 02</a><a href="https://polyhaven.com/a/wooden_crate_01">Wooden crate 01</a><a href="/assets/manifest.json">Local asset manifest</a></div><p><a href="https://erichlof.github.io/THREE.js-RayTracing-Renderer/Ray_Tracer_Challenge.html">The Ray Tracer Challenge</a> and <a href="https://erichlof.github.io/THREE.js-PathTracing-Renderer/">THREE.js PathTracing Renderer</a> are the references you supplied. Rendering uses Three.js; physics uses Cannon-es; controls use Lucide icons.</p></details>
+    </section>
+
+    <section id="history">
+      <div class="section-heading"><span class="index">06</span><h2>Build journal</h2></div>
+      <table class="history"><thead><tr><th>Pass</th><th>What changed</th><th>Evidence</th></tr></thead><tbody><tr><td>01</td><td>First deterministic glass, scanned soil, chalk circle, and a procedural neighborhood.</td><td><a href="/devlog/01-macro.png">First close-up</a></td></tr><tr><td>02</td><td>Scanned plant, chair, and crates; narrower ribbons; ground-level weathering; revised sunlight and static geometry batching.</td><td><a href="/devlog/02-macro.png">Material pass</a></td></tr><tr><td>03</td><td>Playable flicks, scoring, seven-shot mode, sound, reset, portrait framing, live orbit recording, and motion-stability checks.</td><td><a href="/devlog/03-capture.json">Verified report</a></td></tr></tbody></table>
+    </section>
+
+    <section id="review">
+      <div class="section-heading"><span class="index">07</span><h2>Your next decision</h2></div>
+      <p class="prose">The next directions below are proposals only. Nothing is approved automatically. Review notes stay in this browser and can be exported as a JSON file.</p>
+      <form class="review-form" id="review-form">
+        <fieldset class="options"><legend class="kicker">Worth exploring next</legend><label><input type="checkbox" name="next" value="art">Push this street's realism further</label><label><input type="checkbox" name="next" value="hands">Add a convincing animated finger-flick</label><label><input type="checkbox" name="next" value="night">Build the Ramadan-night experience</label><label><input type="checkbox" name="next" value="coastal">Try an Alexandria lane after rain</label><label><input type="checkbox" name="next" value="rules">Use my childhood rules instead</label><label><input type="checkbox" name="next" value="unreal">Compare against a native Unreal slice</label></fieldset>
+        <label for="keep">Keep</label><textarea id="keep" name="keep" placeholder="What earns a place in the next build?"></textarea>
+        <label for="change">Change or reject</label><textarea id="change" name="change" placeholder="What breaks the illusion or gets in the way?"></textarea>
+        <label for="propose">Your alternative</label><textarea id="propose" name="propose" placeholder="A different place, rule, mood, or experience..."></textarea>
+        <div class="review-actions"><button class="command primary" id="export-review" type="button">Export review</button><output class="saved" id="notes-status">Saved locally as you edit</output></div>
+      </form>
+    </section>
+    <footer>Checkpoint 03. Captured 26 October 2026 UTC. All photographs and motion evidence come from this local build. <a href="/?scoutTheme=dark">Return to Bely</a>.</footer>
+  </main>
+  <script>
+    const storageKey = 'bely-review-checkpoint-03';
+    const status = document.querySelector('#save-status');
+    const notesStatus = document.querySelector('#notes-status');
+    const textFields = ['keep', 'change', 'propose'];
+    function reviewData() {
+      return {
+        checkpoint: '03', updatedAt: new Date().toISOString(),
+        verdict: document.querySelector('input[name="verdict"]:checked')?.value || null,
+        next: Array.from(document.querySelectorAll('input[name="next"]:checked'), (input) => input.value),
+        ...Object.fromEntries(textFields.map((name) => [name, document.getElementById(name).value])),
+      };
+    }
+    function save() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(reviewData()));
+        status.textContent = 'Review saved locally';
+        notesStatus.textContent = 'Saved in this browser';
+      } catch {
+        status.textContent = 'Storage unavailable';
+        notesStatus.textContent = 'Export to keep your review';
+      }
+    }
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
+      if (saved) {
+        document.querySelectorAll('input[name="verdict"]').forEach((input) => { input.checked = input.value === saved.verdict; });
+        document.querySelectorAll('input[name="next"]').forEach((input) => { input.checked = Array.isArray(saved.next) && saved.next.includes(input.value); });
+        textFields.forEach((name) => { document.getElementById(name).value = typeof saved[name] === 'string' ? saved[name] : ''; });
+        status.textContent = 'Review restored';
+      }
+    } catch { notesStatus.textContent = 'Export to keep your review'; }
+    document.querySelectorAll('input[name="verdict"], input[name="next"], textarea').forEach((input) => {
+      input.addEventListener('input', save);
+      input.addEventListener('change', save);
+    });
+    document.querySelector('#review-form').addEventListener('submit', (event) => event.preventDefault());
+    document.querySelector('#export-review').addEventListener('click', () => {
+      const url = URL.createObjectURL(new Blob([JSON.stringify(reviewData(), null, 2)], { type: 'application/json' }));
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'bely-checkpoint-03-review.json';
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+    document.querySelector('#comparison-slider').addEventListener('input', (event) => {
+      const split = Number(event.target.value);
+      document.querySelector('#after-image').style.clipPath = `inset(0 0 0 ${split}%)`;
+      document.querySelector('#comparison').style.setProperty('--split', `${split}%`);
+    });
+    const looks = {
+      afternoon: { file: '03-street.png', caption: 'After school / Proposed lead look', alt: 'After school: sunlit scanned ground and cool painted shutters' },
+      overcast: { file: '03-overcast.png', caption: 'Soft daylight / Surface readability', alt: 'Soft daylight over the same street and glass marbles' },
+      evening: { file: '03-evening.png', caption: 'Blue hour / Warm practical lights', alt: 'Warm street lamps against a cool evening environment' },
+    };
+    const tabs = Array.from(document.querySelectorAll('[data-photo]'));
+    function selectLook(button) {
+      tabs.forEach((tab) => { tab.setAttribute('aria-selected', String(tab === button)); tab.tabIndex = tab === button ? 0 : -1; });
+      const look = looks[button.dataset.photo];
+      document.querySelector('#lighting-image').src = `/devlog/${look.file}`;
+      document.querySelector('#lighting-image').alt = look.alt;
+      document.querySelector('#lighting-link').href = `/devlog/${look.file}`;
+      document.querySelector('#lighting-caption').textContent = look.caption;
+      document.querySelector('#lighting-panel').setAttribute('aria-labelledby', button.id);
+    }
+    tabs.forEach((button, index) => {
+      button.addEventListener('click', () => selectLook(button));
+      button.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        tabs[next].focus();
+        selectLook(tabs[next]);
+      });
+    });
+  </script>
+</body>
+</html>

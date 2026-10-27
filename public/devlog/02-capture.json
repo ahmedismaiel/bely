@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-10-26T04:39:11.408Z",
+  "browser": "Microsoft Edge / Playwright",
+  "captures": [
+    {
+      "filename": "02-street.png",
+      "view": "street",
+      "hash": 2961693379,
+      "meanBrightness": 76.27866083333333,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "filename": "02-macro.png",
+      "view": "macro",
+      "hash": 1314528392,
+      "meanBrightness": 72.858621875,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ],
+  "errors": []
+}
