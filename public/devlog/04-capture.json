@@ -1,0 +1,60 @@
+{
+  "timestamp": "2026-10-28T05:23:57.539Z",
+  "captures": [
+    {
+      "arena": "nour",
+      "file": "04-nour.webp",
+      "hash": 2600857963,
+      "meanBrightness": 188.8165075,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "arena": "workshop",
+      "file": "04-workshop.webp",
+      "hash": 2635725718,
+      "meanBrightness": 98.27770854166667,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "arena": "courtyard",
+      "file": "04-courtyard.webp",
+      "hash": 2271181819,
+      "meanBrightness": 155.25797708333334,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "arena": "alexandria",
+      "file": "04-alexandria.webp",
+      "hash": 240807304,
+      "meanBrightness": 154.99863145833334,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "arena": "delta",
+      "file": "04-delta.webp",
+      "hash": 1521430108,
+      "meanBrightness": 135.80738770833332,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "arena": "festival",
+      "file": "04-festival.webp",
+      "hash": 4107522423,
+      "meanBrightness": 110.59497666666667,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ],
+  "errors": []
+}

@@ -8,6 +8,9 @@ const assets = [
   { id: 'brown_mud_02', name: 'ground', maps: ['Diffuse', 'nor_gl', 'Rough', 'Displacement'], quality: '2k' },
   { id: 'plastered_wall_02', name: 'plaster', maps: ['Diffuse', 'nor_gl', 'Rough'], quality: '2k' },
   { id: 'aerial_asphalt_01', name: 'stone', maps: ['Diffuse', 'nor_gl', 'Rough'], quality: '2k' },
+  { id: 'concrete_floor_02', name: 'concrete', maps: ['Diffuse', 'nor_gl', 'Rough'], quality: '2k' },
+  { id: 'floor_tiles_06', name: 'tiles', maps: ['Diffuse', 'nor_gl', 'Rough'], quality: '2k' },
+  { id: 'sand_01', name: 'sand', maps: ['Diffuse', 'nor_gl', 'Rough'], quality: '2k' },
   { id: 'kloppenheim_06_puresky', name: 'sky', maps: ['hdri'], quality: '1k' },
 ];
 const manifest = [];

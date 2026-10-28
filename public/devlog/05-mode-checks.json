@@ -1,0 +1,228 @@
+{
+  "timestamp": "2026-10-28T05:16:42.251Z",
+  "results": [
+    {
+      "mode": "trail",
+      "moving": {
+        "active": true,
+        "paused": false,
+        "experiment": "trail-01",
+        "mode": "trail",
+        "difficulty": 1,
+        "elapsed": 1.1000999999999996,
+        "gates": 0,
+        "resets": 0,
+        "won": false,
+        "finished": false,
+        "grounded": true,
+        "pulseCharges": 2,
+        "glideRemaining": 3,
+        "position": [
+          -0.002646004507324143,
+          0.1239468995381222,
+          0.9394943976000176
+        ],
+        "originalMatch": "first-flick",
+        "reviews": 0
+      },
+      "powers": {
+        "jump": true,
+        "glide": true,
+        "pulse": true
+      },
+      "pixels": {
+        "hash": 2336087651,
+        "meanBrightness": 146.41419166666665,
+        "width": 1600,
+        "height": 1000,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    },
+    {
+      "mode": "pulse",
+      "moving": {
+        "active": true,
+        "paused": false,
+        "experiment": "pulse-01",
+        "mode": "pulse",
+        "difficulty": 1,
+        "elapsed": 1.1000999999999999,
+        "gates": 0,
+        "resets": 0,
+        "won": false,
+        "finished": false,
+        "grounded": true,
+        "pulseCharges": 4,
+        "glideRemaining": 3,
+        "position": [
+          -0.00021022471117876834,
+          0.11546882767209132,
+          0.7359002775144965
+        ],
+        "originalMatch": "first-flick",
+        "reviews": 0
+      },
+      "powers": {
+        "jump": true,
+        "glide": true,
+        "pulse": true
+      },
+      "pixels": {
+        "hash": 3925619470,
+        "meanBrightness": 147.76534854166667,
+        "width": 1600,
+        "height": 1000,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    },
+    {
+      "mode": "sky",
+      "moving": {
+        "active": true,
+        "paused": false,
+        "experiment": "sky-01",
+        "mode": "sky",
+        "difficulty": 1,
+        "elapsed": 1.1001999999999987,
+        "gates": 0,
+        "resets": 0,
+        "won": false,
+        "finished": false,
+        "grounded": true,
+        "pulseCharges": 2,
+        "glideRemaining": 7,
+        "position": [
+          0.0007699233666240615,
+          0.10299871860635929,
+          0.7303448547369836
+        ],
+        "originalMatch": "first-flick",
+        "reviews": 0
+      },
+      "powers": {
+        "jump": true,
+        "glide": true,
+        "pulse": true
+      },
+      "pixels": {
+        "hash": 4004352069,
+        "meanBrightness": 145.84570875,
+        "width": 1600,
+        "height": 1000,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    },
+    {
+      "mode": "gravity",
+      "moving": {
+        "active": true,
+        "paused": false,
+        "experiment": "gravity-01",
+        "mode": "gravity",
+        "difficulty": 1,
+        "elapsed": 1.1313000000000009,
+        "gates": 0,
+        "resets": 0,
+        "won": false,
+        "finished": false,
+        "grounded": true,
+        "pulseCharges": 2,
+        "glideRemaining": 3,
+        "position": [
+          -0.00026848772338610604,
+          0.12943586920247294,
+          0.9101449674205373
+        ],
+        "originalMatch": "first-flick",
+        "reviews": 0
+      },
+      "powers": {
+        "jump": true,
+        "glide": true,
+        "pulse": true
+      },
+      "pixels": {
+        "hash": 3497861221,
+        "meanBrightness": 145.84393125,
+        "width": 1600,
+        "height": 1000,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    },
+    {
+      "mode": "sprint",
+      "moving": {
+        "active": true,
+        "paused": false,
+        "experiment": "sprint-01",
+        "mode": "sprint",
+        "difficulty": 1,
+        "elapsed": 1.144099999999999,
+        "gates": 0,
+        "resets": 0,
+        "won": false,
+        "finished": false,
+        "grounded": true,
+        "pulseCharges": 2,
+        "glideRemaining": 3,
+        "position": [
+          0.008784622963537688,
+          0.12294913903708582,
+          0.834745703994334
+        ],
+        "originalMatch": "first-flick",
+        "reviews": 0
+      },
+      "powers": {
+        "jump": true,
+        "glide": true,
+        "pulse": true
+      },
+      "pixels": {
+        "hash": 874137544,
+        "meanBrightness": 145.12899604166665,
+        "width": 1600,
+        "height": 1000,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    },
+    {
+      "mode": "courier",
+      "moving": {
+        "active": true,
+        "paused": false,
+        "experiment": "courier-01",
+        "mode": "courier",
+        "difficulty": 1,
+        "elapsed": 1.1002000000000012,
+        "gates": 0,
+        "resets": 0,
+        "won": false,
+        "finished": false,
+        "grounded": true,
+        "pulseCharges": 2,
+        "glideRemaining": 3,
+        "position": [
+          0,
+          0.10299891395933429,
+          0.7249280869335526
+        ],
+        "originalMatch": "first-flick",
+        "reviews": 0
+      },
+      "powers": {
+        "jump": true,
+        "glide": true,
+        "pulse": true
+      },
+      "pixels": {
+        "hash": 4131566812,
+        "meanBrightness": 146.10177895833334,
+        "width": 1600,
+        "height": 1000,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    }
+  ],
+  "errors": []
+}

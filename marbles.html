@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="Bely Marble Studio. Explore one hundred marbles in a cinematic, touch-friendly showroom.">
+    <meta name="theme-color" content="#292929">
+    <link rel="icon" href="./bely.svg" type="image/svg+xml">
+    <title>BELY / Marble Studio</title>
+    <script>
+      (() => {
+        const param = new URLSearchParams(window.location.search).get('scoutTheme');
+        const theme = param || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body class="showroom-page">
+    <div id="showroom-app"></div>
+    <script type="module" src="/src/showroom.ts"></script>
+  </body>
+</html>

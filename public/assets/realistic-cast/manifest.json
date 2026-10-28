@@ -1,0 +1,226 @@
+{
+  "license": "MIT",
+  "source": "https://github.com/microsoft/Microsoft-Rocketbox",
+  "avatars": [
+    {
+      "id": "Female_Adult_05",
+      "model": "Avatars/Adults/Female_Adult_05/Export/Female_Adult_05.fbx",
+      "textures": [
+        "Avatars/Adults/Female_Adult_05/Female_Adult_05.png",
+        "Avatars/Adults/Female_Adult_05/Textures/f005_body_color.webp",
+        "Avatars/Adults/Female_Adult_05/Textures/f005_body_normal.webp",
+        "Avatars/Adults/Female_Adult_05/Textures/f005_body_specular.webp",
+        "Avatars/Adults/Female_Adult_05/Textures/f005_head_color.webp",
+        "Avatars/Adults/Female_Adult_05/Textures/f005_head_normal.webp",
+        "Avatars/Adults/Female_Adult_05/Textures/f005_head_specular.webp",
+        "Avatars/Adults/Female_Adult_05/Textures/f005_opacity_color.webp"
+      ]
+    },
+    {
+      "id": "Male_Adult_01",
+      "model": "Avatars/Adults/Male_Adult_01/Export/Male_Adult_01.fbx",
+      "textures": [
+        "Avatars/Adults/Male_Adult_01/Male_Adult_01.png",
+        "Avatars/Adults/Male_Adult_01/Textures/m002_body_color.webp",
+        "Avatars/Adults/Male_Adult_01/Textures/m002_body_normal.webp",
+        "Avatars/Adults/Male_Adult_01/Textures/m002_body_specular.webp",
+        "Avatars/Adults/Male_Adult_01/Textures/m002_head_color.webp",
+        "Avatars/Adults/Male_Adult_01/Textures/m002_head_normal.webp",
+        "Avatars/Adults/Male_Adult_01/Textures/m002_head_specular.webp",
+        "Avatars/Adults/Male_Adult_01/Textures/m002_opacity_color.webp"
+      ]
+    },
+    {
+      "id": "Male_Adult_08",
+      "model": "Avatars/Adults/Male_Adult_08/Export/Male_Adult_08.fbx",
+      "textures": [
+        "Avatars/Adults/Male_Adult_08/Male_Adult_08.png",
+        "Avatars/Adults/Male_Adult_08/Textures/m014_body_color.webp",
+        "Avatars/Adults/Male_Adult_08/Textures/m014_body_normal.webp",
+        "Avatars/Adults/Male_Adult_08/Textures/m014_body_specular.webp",
+        "Avatars/Adults/Male_Adult_08/Textures/m014_head_color.webp",
+        "Avatars/Adults/Male_Adult_08/Textures/m014_head_normal.webp",
+        "Avatars/Adults/Male_Adult_08/Textures/m014_head_specular.webp",
+        "Avatars/Adults/Male_Adult_08/Textures/m014_opacity_color.webp"
+      ]
+    }
+  ],
+  "animations": {
+    "idle": "Animations/all_animations_max_motextr_static/f_idle_breathe_01.max.fbx",
+    "talk": "Animations/all_animations_max_motextr_static/f_gestic_talk_relaxed_01.max.fbx",
+    "walk": "Animations/all_animations_max_motextr_xy/f_walk_cool_01.max.fbx"
+  },
+  "files": [
+    {
+      "path": "Avatars/Adults/Female_Adult_05/Export/Female_Adult_05.fbx",
+      "bytes": 594160,
+      "sha256": "fffbb46af5f0f0323abad47f04f6067ec6f8757a345d5e53804601bbb77feca4"
+    },
+    {
+      "path": "Avatars/Adults/Female_Adult_05/Female_Adult_05.png",
+      "bytes": 420293,
+      "sha256": "dd97b6d503a6d828d929be72e97fd02283c67e85fa74519dd5f8e8a8ca6a40e5"
+    },
+    {
+      "path": "Avatars/Adults/Female_Adult_05/Textures/f005_body_color.webp",
+      "original": "Avatars/Adults/Female_Adult_05/Textures/f005_body_color.tga",
+      "bytes": 212588,
+      "sha256": "8a0d3cf80635c536e2b9ef616af2deb5eaa5d44b1087c7d527805986e42fa35f"
+    },
+    {
+      "path": "Avatars/Adults/Female_Adult_05/Textures/f005_body_normal.webp",
+      "original": "Avatars/Adults/Female_Adult_05/Textures/f005_body_normal.tga",
+      "bytes": 165400,
+      "sha256": "90c90c741a51bdcf1e611776b68b51008afa119f29efb49a6a94bfd3bd2b56ee"
+    },
+    {
+      "path": "Avatars/Adults/Female_Adult_05/Textures/f005_body_specular.webp",
+      "original": "Avatars/Adults/Female_Adult_05/Textures/f005_body_specular.tga",
+      "bytes": 18578,
+      "sha256": "212d06cb1b64f05dcb70d5dde253a70f0f48f1af1f067c5d470032a06df817d2"
+    },
+    {
+      "path": "Avatars/Adults/Female_Adult_05/Textures/f005_head_color.webp",
+      "original": "Avatars/Adults/Female_Adult_05/Textures/f005_head_color.tga",
+      "bytes": 88626,
+      "sha256": "5d778524cdeca39e508d25d87efbd425aa5ff5f68fbdccbdfd8f0934fd9051c8"
+    },
+    {
+      "path": "Avatars/Adults/Female_Adult_05/Textures/f005_head_normal.webp",
+      "original": "Avatars/Adults/Female_Adult_05/Textures/f005_head_normal.tga",
+      "bytes": 119722,
+      "sha256": "aaccc8d392a5b7e8402387e73d8b0987285dd86f02ecb16bcbbef21fcbe30e38"
+    },
+    {
+      "path": "Avatars/Adults/Female_Adult_05/Textures/f005_head_specular.webp",
+      "original": "Avatars/Adults/Female_Adult_05/Textures/f005_head_specular.tga",
+      "bytes": 23296,
+      "sha256": "d44947176a7204ef63308551550ab001b0d62c5cd3f502b1df68a962a0cf9bef"
+    },
+    {
+      "path": "Avatars/Adults/Female_Adult_05/Textures/f005_opacity_color.webp",
+      "original": "Avatars/Adults/Female_Adult_05/Textures/f005_opacity_color.tga",
+      "bytes": 284312,
+      "sha256": "f29ced1240e728a8ca033ca71dcc22d46b38f837ed7a3bf197def114e05b78ba"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_01/Export/Male_Adult_01.fbx",
+      "bytes": 521472,
+      "sha256": "8d1edb51b4dc3427ae2456f4407fc105532c145dd019e53cd42bab31cc948a29"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_01/Male_Adult_01.png",
+      "bytes": 450889,
+      "sha256": "54c9b5a695881c3d8aea99fb23d234282a5642c3e96f966b441ab7893461d535"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_01/Textures/m002_body_color.webp",
+      "original": "Avatars/Adults/Male_Adult_01/Textures/m002_body_color.tga",
+      "bytes": 119970,
+      "sha256": "1c738d34dde29771c7cc2a8002b0296be86e8bee243095b3567466eb79c1d117"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_01/Textures/m002_body_normal.webp",
+      "original": "Avatars/Adults/Male_Adult_01/Textures/m002_body_normal.tga",
+      "bytes": 99312,
+      "sha256": "4b0812ceff437ca27d3e3f128eeceb7ca37e696f182f1d5c3fa7a6657a766f91"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_01/Textures/m002_body_specular.webp",
+      "original": "Avatars/Adults/Male_Adult_01/Textures/m002_body_specular.tga",
+      "bytes": 16836,
+      "sha256": "9f1df93195ee4ade309979045d55cac6b1a9776e7b4e15313f489cf1fc163c79"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_01/Textures/m002_head_color.webp",
+      "original": "Avatars/Adults/Male_Adult_01/Textures/m002_head_color.tga",
+      "bytes": 92948,
+      "sha256": "41ddf4063926e2f61a95c25a1c3028230b09fa6fa6753dcc2562d3191f53f9ec"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_01/Textures/m002_head_normal.webp",
+      "original": "Avatars/Adults/Male_Adult_01/Textures/m002_head_normal.tga",
+      "bytes": 105612,
+      "sha256": "0c1011c0ce537b568f1d0f824db6cf2f04f8e415e8cebc99f9873fedc0093b09"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_01/Textures/m002_head_specular.webp",
+      "original": "Avatars/Adults/Male_Adult_01/Textures/m002_head_specular.tga",
+      "bytes": 49942,
+      "sha256": "e57882f657330cf4dee7b580df4e2942917fc6e51e70e0cc38c022e87147e730"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_01/Textures/m002_opacity_color.webp",
+      "original": "Avatars/Adults/Male_Adult_01/Textures/m002_opacity_color.tga",
+      "bytes": 357022,
+      "sha256": "4874fb0bbf764b394e9e03bcc22ef4fd19de48674120f39bd68f2d55fb282e10"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_08/Export/Male_Adult_08.fbx",
+      "bytes": 508784,
+      "sha256": "e0d979315a5f11050945522f9f084932807af2edeefbdb380a2c9aa36c9f9bb3"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_08/Male_Adult_08.png",
+      "bytes": 448126,
+      "sha256": "022f5cd70091203ed8c64734ff859b0b57af62ba06cfa4ba34d31b333f715c5a"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_08/Textures/m014_body_color.webp",
+      "original": "Avatars/Adults/Male_Adult_08/Textures/m014_body_color.tga",
+      "bytes": 68208,
+      "sha256": "533682a524ec06cf90c06c47f81c9e4a8d1a7976bf0db70e19fd42b94923008d"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_08/Textures/m014_body_normal.webp",
+      "original": "Avatars/Adults/Male_Adult_08/Textures/m014_body_normal.tga",
+      "bytes": 144600,
+      "sha256": "c53fe27d7d578727fe193a70c71fc155599a1efb1f84e8af7a12c5e457a12f5a"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_08/Textures/m014_body_specular.webp",
+      "original": "Avatars/Adults/Male_Adult_08/Textures/m014_body_specular.tga",
+      "bytes": 8660,
+      "sha256": "12f1344d39b46dbeb58eca1486c6d662cc53628ac2f29db5723b5d2004af7679"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_08/Textures/m014_head_color.webp",
+      "original": "Avatars/Adults/Male_Adult_08/Textures/m014_head_color.tga",
+      "bytes": 108904,
+      "sha256": "09e591bd47a1f7ebcf0e38a5adbbf637b149cca7c60cf5507bf7b3c7ddfc04f7"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_08/Textures/m014_head_normal.webp",
+      "original": "Avatars/Adults/Male_Adult_08/Textures/m014_head_normal.tga",
+      "bytes": 152754,
+      "sha256": "45e4a9a8aa37acfd28795196a20682d1cc6b3b0d56e173499db06dd777de7516"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_08/Textures/m014_head_specular.webp",
+      "original": "Avatars/Adults/Male_Adult_08/Textures/m014_head_specular.tga",
+      "bytes": 108690,
+      "sha256": "a6036afa40643b38d26bc529940e733ae2af4e2aa589038a4a7a32e13f2dfc6a"
+    },
+    {
+      "path": "Avatars/Adults/Male_Adult_08/Textures/m014_opacity_color.webp",
+      "original": "Avatars/Adults/Male_Adult_08/Textures/m014_opacity_color.tga",
+      "bytes": 356678,
+      "sha256": "21c8cb37852229481c6cc6c7b2a733c918525144153f7e1c48e39abce160926f"
+    },
+    {
+      "path": "Animations/all_animations_max_motextr_static/f_idle_breathe_01.max.fbx",
+      "bytes": 1379504,
+      "sha256": "e470ba984484149c8269772b7640b754bd996ba83b23ae75535128412997aa45"
+    },
+    {
+      "path": "Animations/all_animations_max_motextr_static/f_gestic_talk_relaxed_01.max.fbx",
+      "bytes": 4802192,
+      "sha256": "a22d59d1d0cc34a16df70a994ef829d3206034f6416bc9bd3de387fb3f204c61"
+    },
+    {
+      "path": "Animations/all_animations_max_motextr_xy/f_walk_cool_01.max.fbx",
+      "bytes": 1029584,
+      "sha256": "6cf44c51d8cfed1bcd08f1e172b34a1ee5ccbb938530c599a0c2288a58005846"
+    }
+  ]
+}

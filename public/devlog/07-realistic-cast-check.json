@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-10-28T16:41:28.894Z",
+  "checks": [
+    {
+      "level": "first-flick",
+      "state": {
+        "active": true,
+        "loading": false,
+        "time": 10.001500000000108,
+        "line": 1,
+        "level": "first-flick",
+        "skipAll": false,
+        "castLoaded": true,
+        "castSource": "Microsoft Rocketbox / MIT",
+        "avatars": [
+          "Male_Adult_08",
+          "Female_Adult_05",
+          "Male_Adult_01"
+        ],
+        "clips": [
+          "Idle_Loop",
+          "Walk_Loop",
+          "Idle_Talking_Loop",
+          "Fixing_Kneeling",
+          "PickUp_Table",
+          "Interact",
+          "Crouch_Idle_Loop"
+        ]
+      },
+      "pixels": {
+        "hash": 3379583670,
+        "meanBrightness": 170.454378125,
+        "width": 1600,
+        "height": 1000,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    },
+    {
+      "level": "king-of-the-hara",
+      "state": {
+        "active": true,
+        "loading": false,
+        "time": 10.00150000000002,
+        "line": 1,
+        "level": "king-of-the-hara",
+        "skipAll": false,
+        "castLoaded": true,
+        "castSource": "Microsoft Rocketbox / MIT",
+        "avatars": [
+          "Male_Adult_08",
+          "Female_Adult_05",
+          "Male_Adult_01"
+        ],
+        "clips": [
+          "Idle_Loop",
+          "Walk_Loop",
+          "Idle_Talking_Loop",
+          "Fixing_Kneeling",
+          "PickUp_Table",
+          "Interact",
+          "Crouch_Idle_Loop"
+        ]
+      },
+      "pixels": {
+        "hash": 1159016145,
+        "meanBrightness": 121.49803166666666,
+        "width": 1600,
+        "height": 1000,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-10-28T05:25:35.251Z",
+  "checks": {
+    "cast": {
+      "active": true,
+      "loading": false,
+      "time": 10.002000000000054,
+      "line": 1,
+      "level": "first-flick",
+      "castLoaded": true,
+      "clips": [
+        "Idle_Loop",
+        "Walk_Loop",
+        "Idle_Talking_Loop",
+        "Fixing_Kneeling",
+        "PickUp_Table",
+        "Interact",
+        "Crouch_Idle_Loop"
+      ]
+    },
+    "giza": {
+      "hash": 2229399873,
+      "meanBrightness": 188.81650666666667,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "citadel": {
+      "hash": 2271181819,
+      "meanBrightness": 155.25797708333334,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "alexandria": {
+      "hash": 240807304,
+      "meanBrightness": 154.99863145833334,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "festival": {
+      "hash": 4107522423,
+      "meanBrightness": 110.59497666666667,
+      "width": 1600,
+      "height": 1000,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "englishDialogue": "Then let us bring them together again. Before I leave for college, one last neighborhood final.",
+    "mobile": {
+      "width": 372,
+      "bounds": 372
+    }
+  },
+  "errors": []
+}

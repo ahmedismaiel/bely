@@ -1,0 +1,68 @@
+{
+  "before": {
+    "origin": 1793167924435.1,
+    "url": "http://127.0.0.1:5177/?lang=en&debug=1&cinematics=0&scoutTheme=dark",
+    "match": {
+      "active": true,
+      "mode": "practice",
+      "shots": 1,
+      "score": 0,
+      "total": 3,
+      "roundOver": false,
+      "won": false,
+      "levelId": "first-flick",
+      "rule": "knockout",
+      "goal": 2,
+      "shotLimit": 5,
+      "rivalScore": 0,
+      "rivalShots": 0,
+      "turn": "player",
+      "banked": false,
+      "foul": false,
+      "lastShot": null,
+      "remaining": [
+        1,
+        2,
+        3
+      ],
+      "paused": false,
+      "preview": false,
+      "replaying": false,
+      "canReplay": false
+    }
+  },
+  "after": {
+    "origin": 1793167924435.1,
+    "url": "http://127.0.0.1:5177/?lang=en&debug=1&cinematics=0&scoutTheme=dark",
+    "match": {
+      "active": true,
+      "mode": "practice",
+      "shots": 1,
+      "score": 0,
+      "total": 3,
+      "roundOver": false,
+      "won": false,
+      "levelId": "first-flick",
+      "rule": "knockout",
+      "goal": 2,
+      "shotLimit": 5,
+      "rivalScore": 0,
+      "rivalShots": 0,
+      "turn": "player",
+      "banked": false,
+      "foul": false,
+      "lastShot": null,
+      "remaining": [
+        1,
+        2,
+        3
+      ],
+      "paused": false,
+      "preview": false,
+      "replaying": false,
+      "canReplay": false
+    }
+  },
+  "nestedMenuPreserved": true,
+  "errors": []
+}

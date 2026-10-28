@@ -9,9 +9,14 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { createGlassMarbles, groundDeclarations } from './glass';
+import { createDestinations } from './arenas';
+import { createLandmarks } from './landmarks';
+import { siteUrl } from './urls';
+import { arenaById } from './levels';
+import type { ArenaId, Level } from './levels';
 
 export type Look = 'afternoon' | 'overcast' | 'evening';
-export type View = 'street' | 'aim' | 'overhead' | 'macro';
+export type View = 'street' | 'aim' | 'overhead' | 'macro' | 'vista';
 
 function randomGenerator(seed: number) {
   return () => {
@@ -32,8 +37,9 @@ function canvasTexture(width: number, height: number, draw: (context: CanvasRend
 }
 
 export async function createStreet(container: HTMLElement, onProgress: (message: string) => void) {
+  const mobileProfile = matchMedia('(pointer: coarse)').matches || container.clientWidth < 750;
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setPixelRatio(mobileProfile ? 1 : Math.min(devicePixelRatio, 1.5));
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -46,12 +52,12 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0xbccbd0, 0.025);
-  const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.009, 90);
+  const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.009, 350);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.085;
   controls.minDistance = 0.11;
-  controls.maxDistance = 3.9;
+  controls.maxDistance = 5.2;
   controls.maxPolarAngle = Math.PI / 2 - 0.018;
   controls.minPolarAngle = 0.06;
   controls.enablePan = true;
@@ -60,10 +66,10 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
   controls.zoomSpeed = 0.6;
 
   const textureLoader = new THREE.TextureLoader();
-  const names = ['ground-diffuse', 'ground-nor_gl', 'ground-rough', 'ground-displacement', 'plaster-diffuse', 'plaster-nor_gl', 'plaster-rough', 'stone-diffuse', 'stone-nor_gl', 'stone-rough'];
+  const names = ['ground-diffuse', 'ground-nor_gl', 'ground-rough', 'ground-displacement', 'plaster-diffuse', 'plaster-nor_gl', 'plaster-rough', 'stone-diffuse', 'stone-nor_gl', 'stone-rough', 'concrete-diffuse', 'concrete-nor_gl', 'concrete-rough', 'tiles-diffuse', 'tiles-nor_gl', 'tiles-rough', 'sand-diffuse', 'sand-nor_gl', 'sand-rough'];
   let loaded = 0;
   const textures = await Promise.all(names.map(async (name) => {
-    const texture = await textureLoader.loadAsync(`/assets/${name}.jpg`);
+    const texture = await textureLoader.loadAsync(siteUrl(`assets/${mobileProfile ? 'mobile/' : ''}${name}.jpg`));
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
     if (name.endsWith('diffuse')) texture.colorSpace = THREE.SRGBColorSpace;
@@ -71,7 +77,7 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
     return texture;
   }));
   onProgress('Lighting the street');
-  const sky = await new HDRLoader().loadAsync('/assets/sky-hdri.hdr');
+  const sky = await new HDRLoader().loadAsync(siteUrl('assets/sky-hdri.hdr'));
   sky.mapping = THREE.EquirectangularReflectionMapping;
   const environmentGenerator = new THREE.PMREMGenerator(renderer);
   const environment = environmentGenerator.fromEquirectangular(sky);
@@ -85,7 +91,7 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
   const sun = new THREE.DirectionalLight(0xffedcf, 3.2);
   sun.position.set(-3, 12, 4);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.mapSize.setScalar(mobileProfile ? 1024 : 2048);
   sun.shadow.camera.left = -6;
   sun.shadow.camera.right = 6;
   sun.shadow.camera.top = 8;
@@ -107,7 +113,7 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
     map: groundMap, normalMap: groundNormal, roughnessMap: groundRough,
     color: 0xe7e5d6, normalScale: new THREE.Vector2(0.62, 0.62), roughness: 0.96,
   });
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), groundMaterial);
+  const ground: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial> = new THREE.Mesh(new THREE.PlaneGeometry(24, 24), groundMaterial);
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
   ground.name = 'Poly Haven scanned soil';
@@ -414,8 +420,8 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
   onProgress('Placing the scanned street props');
   const gltfLoader = new GLTFLoader();
   const modelIds = ['potted_plant_02', 'painted_wooden_chair_02', 'wooden_crate_01'];
-  const scannedModels = await Promise.all(modelIds.map((id) => gltfLoader.loadAsync(`/assets/models/${id}/${id}.gltf`)));
-  function placeScan(index: number, position: number[], height: number, rotation: number) {
+  const scannedModels = await Promise.all(modelIds.map((id) => gltfLoader.loadAsync(siteUrl(`assets/models/${id}/${id}.gltf`))));
+  function placeScan(index: number, position: number[], height: number, rotation: number, parent: THREE.Object3D = street) {
     const model = scannedModels[index].scene.clone(true);
     const originalBounds = new THREE.Box3().setFromObject(model);
     const originalSize = originalBounds.getSize(new THREE.Vector3());
@@ -433,7 +439,7 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
         if (material.map) material.map.anisotropy = renderer.capabilities.getMaxAnisotropy();
       }
     });
-    street.add(model);
+    parent.add(model);
   }
   placeScan(0, [1.43, 0.18, -0.14], 0.92, 0.3);
   placeScan(0, [-1.45, 0.18, -3.66], 1.1, 2);
@@ -499,15 +505,36 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
   }
 
   const marbles = createGlassMarbles({ ground: textures[0], normal: textures[1] });
+  const destinations = createDestinations(scene, { plaster, plasterWhite, shutter, wood, darkWood, iron, brass, stone }, { box, rod, windowUnit, sign, placeScan });
+  const landmarks = createLandmarks(scene, { plaster, plasterWhite, shutter, wood, darkWood, iron, brass, stone });
+  const eventGeometry = new THREE.Group();
+  eventGeometry.name = 'Playable event geometry';
+  scene.add(eventGeometry);
+  const pitMaterial = new THREE.MeshStandardMaterial({ map: textures[4], color: 0x3f3a31, roughness: 1, side: THREE.DoubleSide });
+  const puddleMaterial = new THREE.MeshPhysicalMaterial({ color: 0x334b55, roughness: 0.10, metalness: 0.20, transparent: true, opacity: 0.28, depthWrite: false });
+  const sandMaterial = new THREE.MeshStandardMaterial({ map: textures[16], normalMap: textures[17], color: 0xbcb094, roughness: 1 });
+  const surfaceTextures = new Map<string, THREE.Texture[]>();
+  for (const [surface, index, size] of [['earth', 0, 1.5], ['concrete', 10, 2], ['tile', 13, 1.5], ['wet', 7, 1.5], ['sand', 16, 1.5]] as const) {
+    const maps = textures.slice(index, index + 3).map((texture) => { const clone = texture.clone(); clone.repeat.setScalar(24 / size); return clone; });
+    surfaceTextures.set(surface, maps);
+  }
   groundMaterial.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, marbles.uniforms);
     shader.vertexShader = `varying vec3 vGroundPosition;\n${shader.vertexShader}`.replace('#include <begin_vertex>', '#include <begin_vertex>\nvGroundPosition = (modelMatrix * vec4(position, 1.0)).xyz;');
-    shader.fragmentShader = `varying vec3 vGroundPosition;\n${groundDeclarations}\n${shader.fragmentShader}`.replace('#include <color_fragment>', '#include <color_fragment>\ndiffuseColor.rgb = groundDetails(diffuseColor.rgb, vGroundPosition);');
+    shader.fragmentShader = `varying vec3 vGroundPosition;\n${groundDeclarations}\n${shader.fragmentShader}`.replace('#include <color_fragment>', '#include <color_fragment>\ndiffuseColor.rgb = groundDetails(diffuseColor.rgb, vGroundPosition);').replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
+      for (int zoneIndex = 0; zoneIndex < 4; zoneIndex++) {
+        if (zoneIndex >= uZoneCount) break;
+        vec4 zone = uZones[zoneIndex];
+        float amount = 1.0 - smoothstep(zone.z - 0.018, zone.z, length(vGroundPosition.xz - zone.xy));
+        if (zone.w < 1.5) roughnessFactor = mix(roughnessFactor, 0.09, amount);
+      }
+    `);
   };
   groundMaterial.customProgramCacheKey = () => 'bely-scanned-ground-v1';
 
-  const cubeTarget = new THREE.WebGLCubeRenderTarget(512, { type: THREE.HalfFloatType, generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter });
-  const cubeCamera = new THREE.CubeCamera(0.008, 60, cubeTarget);
+  const renderType = renderer.extensions.has('EXT_color_buffer_float') ? THREE.HalfFloatType : THREE.UnsignedByteType;
+  const cubeTarget = new THREE.WebGLCubeRenderTarget(mobileProfile ? 256 : 512, { type: renderType, generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter });
+  const cubeCamera = new THREE.CubeCamera(0.008, 350, cubeTarget);
   cubeCamera.position.set(0, 0.11, 0);
   scene.add(cubeCamera);
   function refreshEnvironment() {
@@ -524,7 +551,7 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
   scene.add(marbles.group);
   refreshEnvironment();
 
-  const renderTarget = new THREE.WebGLRenderTarget(container.clientWidth, container.clientHeight, { type: THREE.HalfFloatType, samples: 4 });
+  const renderTarget = new THREE.WebGLRenderTarget(container.clientWidth, container.clientHeight, { type: renderType, samples: mobileProfile ? 0 : 4 });
   const composer = new EffectComposer(renderer, renderTarget);
   composer.addPass(new RenderPass(scene, camera));
   const bokeh = new BokehPass(scene, camera, { focus: 1, aperture: 0.0016, maxblur: 0.009 });
@@ -533,7 +560,10 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
   composer.addPass(new OutputPass());
 
   let currentView: View = 'street';
+  let depthOfFieldEnabled = !mobileProfile;
+  bokeh.enabled = depthOfFieldEnabled;
   let currentLook: Look = 'afternoon';
+  let currentArena: ArenaId = 'nour';
   let tour = false;
   let tourTime = 0;
   let portraitFraming = container.clientWidth / container.clientHeight < 1.1;
@@ -542,16 +572,19 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
     aim: { position: new THREE.Vector3(0.10, 0.70, 1.50), target: new THREE.Vector3(0, 0, 0.25) },
     overhead: { position: new THREE.Vector3(0.02, 1.88, 0.39), target: new THREE.Vector3(0, 0, 0.09) },
     macro: { position: new THREE.Vector3(0.13, 0.086, 0.91), target: new THREE.Vector3(0.015, 0.035, 0.69) },
+    vista: { position: new THREE.Vector3(0.42, 0.86, 3.05), target: new THREE.Vector3(0, 1.04, -1.9) },
   };
   function setView(view: View) {
     currentView = view;
+    bokeh.enabled = depthOfFieldEnabled && view !== 'vista';
+    controls.maxPolarAngle = view === 'vista' ? Math.PI * 0.78 : Math.PI / 2 - 0.018;
     tour = false;
     controls.target.copy(views[view].target);
     camera.position.copy(views[view].position);
     camera.fov = view === 'macro' ? 38 : 45;
     const aspect = container.clientWidth / container.clientHeight;
     const framingScale = aspect < 0.65 ? 1.8 : aspect < 1.1 ? 1.25 : 1;
-    if (view !== 'macro') camera.position.sub(controls.target).multiplyScalar(framingScale).add(controls.target);
+    if (view !== 'macro' && view !== 'vista') camera.position.sub(controls.target).multiplyScalar(framingScale).add(controls.target);
     camera.updateProjectionMatrix();
     controls.update();
     camera.updateMatrixWorld(true);
@@ -595,12 +628,115 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
       renderer.toneMappingExposure = 1.3;
     }
     bulbMaterial.emissiveIntensity = look === 'evening' ? 7 : 0;
+    if (currentArena === 'alexandria' && look === 'overcast') {
+      sun.intensity = 0.6;
+      skyLight.intensity = 1.0;
+      scene.environmentIntensity = 0.55;
+      scene.backgroundIntensity = 0.45;
+      marbles.uniforms.uSkyFill.value.setRGB(0.45, 0.56, 0.66);
+      renderer.toneMappingExposure = 0.9;
+    }
     practicalLights.forEach((light) => { light.intensity = look === 'evening' ? 13 : 0; });
     marbles.uniforms.uSunDirection.value.copy(sun.position).normalize();
     marbles.uniforms.uSunColor.value.copy(sun.color);
     marbles.uniforms.uSunIntensity.value = sun.intensity;
     marbles.uniforms.uCaustics.value = look === 'afternoon' ? 0.65 : 0.1;
     refreshEnvironment();
+  }
+
+  function setLevel(level: Level) {
+    const arena = arenaById(level.arena);
+    currentArena = arena.id;
+    street.visible = ['workshop', 'festival'].includes(arena.id);
+    destinations.setArena(arena.id === 'courtyard' ? 'nour' : arena.id);
+    landmarks.setArena(arena.id);
+    (scene.fog as THREE.FogExp2).density = arena.id === 'nour' ? 0.0032 : arena.id === 'alexandria' ? 0.003 : arena.id === 'courtyard' ? 0.008 : 0.025;
+    plaster.color.setHex(arena.wallTint);
+    shutter.color.setHex(arena.shutterTint);
+    pebbles.visible = arena.surface === 'earth' || arena.surface === 'sand';
+    const maps = surfaceTextures.get(arena.surface)!;
+    groundMaterial.map = maps[0];
+    groundMaterial.normalMap = maps[1];
+    groundMaterial.roughnessMap = maps[2];
+    groundMaterial.color.setHex(arena.groundTint);
+    groundMaterial.roughness = arena.surface === 'wet' ? 0.45 : arena.surface === 'tile' ? 0.72 : 0.95;
+    groundMaterial.normalScale.setScalar(arena.surface === 'tile' ? 0.46 : 0.62);
+    const textureIndex = { earth: 0, concrete: 10, tile: 13, wet: 7, sand: 16 }[arena.surface];
+    marbles.uniforms.uGroundMap.value = textures[textureIndex];
+    marbles.uniforms.uGroundNormal.value = textures[textureIndex + 1];
+    marbles.uniforms.uGroundTint.value.copy(groundMaterial.color);
+    marbles.uniforms.uGroundScale.value = arena.surface === 'concrete' ? 0.5 : 1 / 1.5;
+    marbles.uniforms.uRingRadius.value = level.ringRadius;
+    marbles.uniforms.uPocketCount.value = level.pockets.length;
+    level.pockets.forEach((pocket, index) => marbles.uniforms.uPockets.value[index].set(pocket.x, pocket.z, pocket.radius));
+    marbles.uniforms.uZoneCount.value = arena.zones.length;
+    arena.zones.forEach((zone, index) => marbles.uniforms.uZones.value[index].set(zone.x, zone.z, zone.radius, zone.kind === 'water' ? 1 : 2));
+    marbles.setLayout(level.layout);
+    eventGeometry.traverse((object) => { if (object instanceof THREE.Mesh) object.geometry.dispose(); });
+    eventGeometry.clear();
+    ground.geometry.dispose();
+    if (level.pockets.length) {
+      const floorShape = new THREE.Shape();
+      floorShape.moveTo(-12, -12); floorShape.lineTo(12, -12); floorShape.lineTo(12, 12); floorShape.lineTo(-12, 12); floorShape.closePath();
+      for (const pocket of level.pockets) {
+        const hole = new THREE.Path();
+        hole.absarc(pocket.x, -pocket.z, pocket.radius, 0, Math.PI * 2, true);
+        floorShape.holes.push(hole);
+        const wall = new THREE.Mesh(new THREE.CylinderGeometry(pocket.radius, pocket.radius * 0.73, 0.06, 40, 1, true), pitMaterial);
+        wall.position.set(pocket.x, -0.03, pocket.z);
+        eventGeometry.add(wall);
+        const bottom = new THREE.Mesh(new THREE.CircleGeometry(pocket.radius * 0.78, 40), pitMaterial);
+        bottom.rotation.x = -Math.PI / 2;
+        bottom.position.set(pocket.x, -0.059, pocket.z);
+        eventGeometry.add(bottom);
+        const rim = new THREE.Mesh(new THREE.TorusGeometry(pocket.radius + 0.002, 0.0025, 8, 48), stone);
+        rim.rotation.x = Math.PI / 2;
+        rim.position.set(pocket.x, 0.001, pocket.z);
+        eventGeometry.add(rim);
+      }
+      const geometry = new THREE.ShapeGeometry(floorShape, 48);
+      const positions = geometry.attributes.position;
+      const coordinates = geometry.attributes.uv;
+      for (let index = 0; index < positions.count; index++) coordinates.setXY(index, (positions.getX(index) + 12) / 24, (positions.getY(index) + 12) / 24);
+      ground.geometry = geometry;
+    } else ground.geometry = new THREE.PlaneGeometry(24, 24);
+    for (const barrier of level.barriers) {
+      const mesh = new THREE.Mesh(new RoundedBoxGeometry(barrier.width, barrier.height, barrier.depth, 3, 0.005), { wood, stone, metal: iron }[barrier.material]);
+      mesh.position.set(barrier.x, barrier.height / 2, barrier.z);
+      mesh.rotation.y = barrier.angle ?? 0;
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      eventGeometry.add(mesh);
+      if (barrier.bank) {
+        const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.002, 0.008, barrier.depth * 0.86), brass);
+        stripe.position.set(barrier.x + (barrier.x < 0 ? 1 : -1) * (barrier.width / 2 + 0.001), barrier.height * 0.75, barrier.z);
+        eventGeometry.add(stripe);
+      }
+    }
+    for (const zone of arena.zones) {
+      const patch = new THREE.Mesh(new THREE.CircleGeometry(zone.radius, 64), zone.kind === 'water' ? puddleMaterial : sandMaterial);
+      const positions = patch.geometry.attributes.position;
+      for (let vertex = 1; vertex < positions.count; vertex++) {
+        const amplitude = 1 + Math.sin(vertex * 2.31) * 0.055;
+        positions.setXY(vertex, positions.getX(vertex) * amplitude, positions.getY(vertex) * amplitude);
+      }
+      patch.rotation.x = -Math.PI / 2;
+      patch.position.set(zone.x, 0.0015, zone.z);
+      patch.receiveShadow = true;
+      eventGeometry.add(patch);
+    }
+    const home = level.layout[0].position;
+    views.macro.target.set(home[0], home[1], home[2]);
+    views.macro.position.set(home[0] + 0.115, home[1] + 0.051, home[2] + 0.22);
+    const angle = { nour: 0.22, workshop: 0.48, courtyard: 0.28, alexandria: -0.28, delta: 0.42, festival: 0.22 }[arena.id];
+    views.street.position.set(angle, 0.29, 1.51);
+    if (arena.id === 'nour' || arena.id === 'courtyard') views.street.position.set(angle, 0.31, 1.65);
+    views.vista.position.set(arena.id === 'alexandria' ? -0.52 : 0.42, 0.88, 2.55);
+    views.vista.target.set(arena.id === 'alexandria' ? 0.28 : 0, arena.id === 'delta' ? 1.48 : 1.02, -2.0);
+    if (arena.id === 'nour') { views.vista.position.set(0.5, 1.55, 3.7); views.vista.target.set(-1, 2.3, -8); }
+    if (arena.id === 'courtyard') { views.vista.position.set(0.6, 1.2, 3.2); views.vista.target.set(0, 3.3, -12); }
+    setView('street');
+    setLook(arena.look);
   }
 
   function render(delta: number) {
@@ -636,15 +772,15 @@ export async function createStreet(container: HTMLElement, onProgress: (message:
   render(0);
 
   return {
-    renderer, scene, camera, controls, marbles, render, setView, setLook, refreshEnvironment,
+    renderer, scene, camera, controls, marbles, render, setView, setLook, setLevel, refreshEnvironment,
     setTour(enabled: boolean) { tour = enabled; tourTime = 0.64; },
-    setDepthOfField(enabled: boolean) { bokeh.enabled = enabled; },
+    setDepthOfField(enabled: boolean) { depthOfFieldEnabled = enabled; bokeh.enabled = enabled && currentView !== 'vista'; },
     setQuality(quality: string) {
       renderer.setPixelRatio(quality === 'ultra' ? Math.min(devicePixelRatio, 2) : quality === 'balanced' ? 1 : Math.min(devicePixelRatio, 1.5));
       composer.setPixelRatio(renderer.getPixelRatio());
       resize();
     },
-    getState: () => ({ look: currentLook, view: currentView, touring: tour, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, pixelRatio: renderer.getPixelRatio() }),
+    getState: () => ({ look: currentLook, view: currentView, arena: currentArena, touring: tour, mobileProfile, depthOfField: depthOfFieldEnabled, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, pixelRatio: renderer.getPixelRatio() }),
   };
 }
 

@@ -1,0 +1,76 @@
+import { chromium } from '@playwright/test';
+import sharp from 'sharp';
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+
+const output = path.resolve('public/devlog');
+await mkdir(output, { recursive: true });
+const browser = await chromium.launch({ channel: 'msedge', headless: true, args: ['--use-angle=d3d11'] });
+const errors = [];
+const checks = {};
+try {
+  const page = await browser.newPage({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 1 });
+  page.on('pageerror', (error) => errors.push(error.message));
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.goto('http://127.0.0.1:5177/?scoutTheme=dark&debug=1&lang=ar', { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => window.__bely?.ready && window.__bely.cinematic.state().castLoaded, null, { timeout: 120000 });
+  await page.locator('#loading').waitFor({ state: 'hidden' });
+  await page.waitForFunction(() => window.__bely.cinematic.state().time > 10, null, { timeout: 30000 });
+  await page.evaluate(() => window.__bely.cinematic.freeze(true));
+  await page.screenshot({ path: path.join(output, '05-story-arabic.png') });
+  checks.cast = await page.evaluate(() => window.__bely.cinematic.state());
+  assert.ok(checks.cast.clips.includes('Walk_Loop'));
+  assert.ok(checks.cast.clips.includes('Idle_Talking_Loop'));
+  assert.equal(await page.locator('html').getAttribute('dir'), 'rtl');
+  assert.ok(/[\u0600-\u06ff]/.test(await page.locator('#cinema-line').innerText()));
+  await page.locator('#skip-cinema').click();
+  assert.equal(await page.evaluate(() => window.__bely.cinematic.state().active), false);
+  assert.equal(await page.evaluate(() => window.__bely.state().match.paused), false);
+  await page.evaluate(() => { window.__bely.cinematic.freeze(false); window.__bely.cinematic.disable(true); });
+  const before = await page.evaluate(() => localStorage.getItem('bely-journey-v1'));
+  const journey = await page.evaluate(() => window.__bely.state().journey);
+  assert.equal(journey.available.length, 12);
+  assert.equal(journey.debug, true);
+  await page.locator('#open-journey').click();
+  await page.waitForFunction(() => Array.from(document.querySelectorAll('#journey-dialog img')).every((image) => image.complete && image.naturalWidth > 0));
+  await page.screenshot({ path: path.join(output, '05-journey-arabic.png') });
+  await page.locator('[data-arena="festival"]').click();
+  assert.equal(await page.locator('[data-start="king-of-the-hara"]').isDisabled(), false);
+  await page.locator('#close-journey').click();
+  await page.locator('#settings-toggle').click();
+  await page.locator('#language').selectOption('en');
+  assert.equal(await page.locator('html').getAttribute('dir'), 'ltr');
+  await page.locator('#settings-toggle').click();
+  for (const [id, name] of [['first-flick', 'giza'], ['the-well', 'citadel'], ['between-puddles', 'alexandria'], ['under-the-lights', 'festival']]) {
+    await page.evaluate((level) => { window.__bely.previewLevel(level); window.__bely.hideUI(true); }, id);
+    await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    const pixels = await page.evaluate(() => window.__bely.pixels());
+    assert.ok(pixels.meanBrightness > 8 && pixels.meanBrightness < 245);
+    await sharp(await page.screenshot()).webp({ quality: 91 }).toFile(path.join(output, `05-landmark-${name}.webp`));
+    checks[name] = pixels;
+  }
+  assert.equal(await page.evaluate(() => localStorage.getItem('bely-journey-v1')), before);
+  await page.evaluate(() => { window.__bely.hideUI(false); window.__bely.playLevel('first-flick'); window.__bely.cinematic.disable(false); void window.__bely.cinematic.replay(); });
+  await page.waitForFunction(() => window.__bely.cinematic.state().time > 11, null, { timeout: 30000 });
+  await page.evaluate(() => window.__bely.cinematic.freeze(true));
+  await page.screenshot({ path: path.join(output, '05-story-english.png') });
+  checks.englishDialogue = await page.locator('#cinema-line').innerText();
+  assert.ok(checks.englishDialogue.length > 20);
+  await page.evaluate(() => { window.__bely.cinematic.skip(); window.__bely.cinematic.disable(true); });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('#settings-toggle').click();
+  await page.locator('#language').selectOption('ar');
+  await page.locator('#settings-toggle').click();
+  await page.locator('#open-journey').click();
+  await page.screenshot({ path: path.join(output, '05-mobile-arabic.png') });
+  const layout = await page.evaluate(() => ({ width: document.querySelector('#journey-dialog').scrollWidth, bounds: document.querySelector('#journey-dialog').clientWidth }));
+  assert.ok(layout.width <= layout.bounds + 1);
+  checks.mobile = layout;
+  assert.deepEqual(errors, []);
+  await writeFile(path.join(output, '05-presentation-checks.json'), JSON.stringify({ timestamp: new Date().toISOString(), checks, errors }, null, 2));
+  console.log('PASS: licensed rig animation, Arabic and English cinematics, skip/replay, twelve debug-unlocked events, unchanged save, four landmark renders, and mobile RTL layout.');
+} catch (error) {
+  await writeFile(path.join(output, '05-presentation-checks.json'), JSON.stringify({ checks, errors, failure: String(error) }, null, 2));
+  throw error;
+} finally { await browser.close(); }

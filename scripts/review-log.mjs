@@ -32,8 +32,8 @@ try {
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export review', exact: true }).click();
   const download = await downloadPromise;
-  assert.equal(download.suggestedFilename(), 'bely-checkpoint-03-review.json');
-  await page.evaluate(() => localStorage.removeItem('bely-review-checkpoint-03'));
+  assert.equal(download.suggestedFilename(), 'bely-checkpoint-07-review.json');
+  await page.evaluate(() => localStorage.removeItem('bely-review-checkpoint-05'));
   await page.locator('#motion-video').scrollIntoViewIfNeeded();
   await page.evaluate(async () => { await document.querySelector('#motion-video').play(); });
   await page.waitForFunction(() => document.querySelector('#motion-video').currentTime > 0.2);

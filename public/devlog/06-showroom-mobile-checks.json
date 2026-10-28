@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-10-28T18:43:09.926Z",
+  "checks": {
+    "studio": {
+      "poses": {
+        "hero": 3426822084,
+        "low": 4153589616,
+        "core": 374390704,
+        "top": 1266793354,
+        "profile": 1916696979
+      },
+      "catalogSize": true,
+      "filters": true,
+      "automaticShowcase": true,
+      "noGameAssets": true
+    },
+    "mobileStudio": {
+      "touchOrbit": true,
+      "pixelRatio": 1,
+      "layout": {
+        "overflow": false,
+        "boxes": [
+          {
+            "selector": ".studio-catalog",
+            "left": 0,
+            "top": 619,
+            "right": 390,
+            "bottom": 844
+          },
+          {
+            "selector": ".studio-controls",
+            "left": 60,
+            "top": 559,
+            "right": 330,
+            "bottom": 604
+          },
+          {
+            "selector": ".studio-header",
+            "left": 14,
+            "top": 14,
+            "right": 376,
+            "bottom": 59
+          }
+        ]
+      }
+    },
+    "mobileGame": {
+      "profile": true,
+      "depthOfFieldOff": true,
+      "introsOff": true,
+      "pixels": {
+        "hash": 782198324,
+        "meanBrightness": 155.40257119131527,
+        "width": 390,
+        "height": 844,
+        "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti (0x00002208) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "modalPreservesDocument": true
+    },
+    "projectPath": {
+      "base": "/bely-project/",
+      "game": true,
+      "studio": true,
+      "arabicBlog": true
+    }
+  },
+  "errors": []
+}

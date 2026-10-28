@@ -1,12 +1,14 @@
 import * as THREE from 'three';
 import { createMatch } from './physics';
-import type { MatchMode } from './physics';
+import type { Actor, MatchMode } from './physics';
 import type { Street } from './scene';
+import type { Level } from './levels';
 
-type MatchState = ReturnType<ReturnType<typeof createMatch>['snapshot']>;
+export type GameState = ReturnType<ReturnType<typeof createMatch>['snapshot']> & { paused: boolean; preview: boolean; replaying: boolean; canReplay: boolean };
+type ReplayFrame = { time: number; balls: { position: number[]; rotation: number[]; visible: boolean }[] };
 
 export function createGame(stage: Street, callbacks: {
-  onChange: (state: MatchState) => void;
+  onChange: (state: GameState) => void;
   onAim: (angle: number, power: number) => void;
 }) {
   let audio: AudioContext | undefined;
@@ -46,6 +48,33 @@ export function createGame(stage: Street, callbacks: {
   const dragOrigin = new THREE.Vector3();
   let previousState = '';
   let aiming = false;
+  let assists = true;
+  let paused = false;
+  let preview = false;
+  let replaying = false;
+  let level: Level | undefined;
+  let rivalClock = 0;
+  let recordingClock = 0;
+  let recording: ReplayFrame[] = [];
+  let lastReplay: ReplayFrame[] = [];
+  let replayClock = 0;
+  let replayFrame = 0;
+  let equipped = { color: 0x087fbc, style: 0, finish: 0, secondary: 0xc8e5dd };
+  let renderedActor: Actor | null = null;
+  let replayActor: Actor = 'player';
+  const savedCamera = { position: new THREE.Vector3(), target: new THREE.Vector3(), damping: true };
+  let replayedShots = 0;
+
+  function snapshot(): GameState {
+    return { ...match.snapshot(), paused, preview, replaying, canReplay: lastReplay.length > 1 };
+  }
+
+  function recordFrame() {
+    recording.push({
+      time: recordingClock,
+      balls: match.bodies.map((body, index) => ({ position: [body.position.x, body.position.y, body.position.z], rotation: [body.quaternion.x, body.quaternion.y, body.quaternion.z, body.quaternion.w], visible: match.isVisible(index) })),
+    });
+  }
 
   const accent = getComputedStyle(document.documentElement).getPropertyValue('--cp-accent').trim();
   const guide = new THREE.Group();
@@ -62,20 +91,28 @@ export function createGame(stage: Street, callbacks: {
   stage.scene.add(guide);
 
   function sync() {
-    match.bodies.forEach((body, index) => {
-      const mesh = stage.marbles.meshes[index];
-      mesh.visible = match.isVisible(index);
-      mesh.position.set(body.position.x, body.position.y, body.position.z);
-      mesh.quaternion.set(body.quaternion.x, body.quaternion.y, body.quaternion.z, body.quaternion.w);
-    });
+    if (!replaying) {
+      stage.marbles.meshes.forEach((mesh, index) => {
+        const body = match.bodies[index];
+        mesh.visible = !!body && match.isVisible(index);
+        if (!body) return;
+        mesh.position.set(body.position.x, body.position.y, body.position.z);
+        mesh.quaternion.set(body.quaternion.x, body.quaternion.y, body.quaternion.z, body.quaternion.w);
+      });
+      const actor = match.snapshot().turn;
+      if (renderedActor !== actor) {
+        renderedActor = actor;
+        stage.marbles.setSkin(actor === 'rival' ? level?.rival?.color ?? equipped.color : equipped.color, actor === 'rival' ? 0 : equipped.style, actor === 'rival' ? 0 : equipped.finish, equipped.secondary);
+      }
+    }
     stage.marbles.sync();
-    const state = match.snapshot();
-    const signature = `${state.shots}/${state.score}/${state.active}/${state.roundOver}/${state.mode}`;
+    const state = snapshot();
+    const signature = `${state.levelId}/${state.shots}/${state.rivalShots}/${state.score}/${state.rivalScore}/${state.turn}/${state.active}/${state.roundOver}/${state.mode}/${paused}/${preview}/${replaying}/${state.canReplay}/${state.lastShot?.serial}`;
     if (signature !== previousState) {
       previousState = signature;
       callbacks.onChange(state);
     }
-    guide.visible = !state.active && !state.roundOver && (aiming || dragging || stage.getState().view === 'aim');
+    guide.visible = assists && !paused && !preview && !replaying && state.turn === 'player' && !state.active && !state.roundOver && (aiming || dragging || stage.getState().view === 'aim');
     if (guide.visible) {
       const shooter = match.bodies[0].position;
       const heading = angle * Math.PI / 180;
@@ -105,18 +142,25 @@ export function createGame(stage: Street, callbacks: {
   }
 
   function shoot(nextAngle = angle, nextPower = power) {
+    if (paused || preview || replaying || match.snapshot().turn !== 'player') return false;
     unlockAudio();
     cancelDrag();
     stage.setTour(false);
     const fired = match.shoot(nextAngle, nextPower);
+    if (fired) { lastReplay = []; recording = []; recordingClock = 0; replayActor = 'player'; recordFrame(); }
     aiming = false;
     sync();
     return fired;
   }
 
   function reset(mode?: MatchMode) {
+    stopReplay();
     cancelDrag();
     match.reset(mode);
+    lastReplay = [];
+    recording = [];
+    rivalClock = 0;
+    renderedActor = null;
     aiming = false;
     setAim(-6, 0.58, false);
     sync();
@@ -132,7 +176,7 @@ export function createGame(stage: Street, callbacks: {
   }
   const canvas = stage.renderer.domElement;
   canvas.addEventListener('pointerdown', (event) => {
-    if (event.button !== 0 || !event.isPrimary || match.snapshot().active || match.snapshot().roundOver) return;
+    if (event.button !== 0 || !event.isPrimary || paused || preview || replaying || match.snapshot().turn !== 'player' || match.snapshot().active || match.snapshot().roundOver) return;
     const point = groundPoint(event);
     const shooter = match.bodies[0].position;
     const projected = stage.marbles.meshes[0].position.clone().project(stage.camera);
@@ -175,15 +219,140 @@ export function createGame(stage: Street, callbacks: {
   addEventListener('keydown', (event) => {
     if (event.target instanceof Element && event.target.closest('input, select, textarea, button, a')) return;
     if (event.code === 'Space') { event.preventDefault(); shoot(); }
-    if (event.key.toLowerCase() === 'r') reset();
+    if (event.key.toLowerCase() === 'r' && !paused && !preview) reset();
     if (event.key === 'Escape') cancelDrag();
   });
+
+  function stopReplay() {
+    if (!replaying) return;
+    replaying = false;
+    stage.controls.update();
+    stage.camera.position.copy(savedCamera.position);
+    stage.controls.target.copy(savedCamera.target);
+    stage.controls.enableDamping = savedCamera.damping;
+    stage.controls.enabled = true;
+    stage.controls.update();
+    renderedActor = null;
+  }
+
+  function replay() {
+    if (replaying) { stopReplay(); sync(); return false; }
+    if (paused || preview || match.snapshot().active || lastReplay.length < 2) return false;
+    cancelDrag();
+    savedCamera.position.copy(stage.camera.position);
+    savedCamera.target.copy(stage.controls.target);
+    savedCamera.damping = stage.controls.enableDamping;
+    stage.controls.enableDamping = false;
+    stage.controls.update();
+    stage.controls.enabled = false;
+    stage.setTour(false);
+    replaying = true;
+    replayedShots++;
+    replayClock = 0;
+    replayFrame = 0;
+    stage.marbles.setSkin(replayActor === 'rival' ? level?.rival?.color ?? equipped.color : equipped.color, replayActor === 'rival' ? 0 : equipped.style, replayActor === 'rival' ? 0 : equipped.finish, equipped.secondary);
+    sync();
+    return true;
+  }
+
+  function tick(delta: number) {
+    if (document.hidden) return;
+    if (replaying) {
+      replayClock += delta * 0.72;
+      while (replayFrame < lastReplay.length - 2 && lastReplay[replayFrame + 1].time < replayClock) replayFrame++;
+      const first = lastReplay[replayFrame];
+      const second = lastReplay[Math.min(replayFrame + 1, lastReplay.length - 1)];
+      const blend = Math.min(1, Math.max(0, (replayClock - first.time) / Math.max(0.001, second.time - first.time)));
+      let fastest = 0;
+      let distance = 0;
+      stage.marbles.meshes.forEach((mesh, index) => {
+        const start = first.balls[index];
+        const end = second.balls[index];
+        mesh.visible = !!start?.visible;
+        if (!start || !end) return;
+        mesh.position.fromArray(start.position).lerp(new THREE.Vector3().fromArray(end.position), blend);
+        mesh.quaternion.fromArray(start.rotation).slerp(new THREE.Quaternion().fromArray(end.rotation), blend);
+        const movement = new THREE.Vector3().fromArray(start.position).distanceToSquared(new THREE.Vector3().fromArray(end.position));
+        if (movement > distance) { fastest = index; distance = movement; }
+      });
+      const focus = stage.marbles.meshes[fastest].position;
+      stage.camera.position.lerp(focus.clone().add(new THREE.Vector3(0.29, 0.19, 0.45)), Math.min(1, delta * 5));
+      stage.controls.target.lerp(focus, Math.min(1, delta * 8));
+      if (replayClock > lastReplay[lastReplay.length - 1].time + 0.3) stopReplay();
+      sync();
+      return;
+    }
+    if (paused || preview) { sync(); return; }
+    const before = match.snapshot();
+    match.step(delta);
+    if (before.active) {
+      recordingClock += delta;
+      if (match.snapshot().active && (recording.length === 0 || recordingClock - recording[recording.length - 1].time >= 1 / 45)) recordFrame();
+      if (!match.snapshot().active) { lastReplay = recording; recording = []; }
+    }
+    const state = match.snapshot();
+    if (!state.active && !state.roundOver && state.turn === 'rival') {
+      rivalClock += delta;
+      if (rivalClock > 1.1) {
+        const shot = match.opponentShot();
+        if (shot && match.shoot(shot.angle, shot.power, 'rival')) {
+          stage.setTour(false);
+          lastReplay = [];
+          recording = [];
+          recordingClock = 0;
+          replayActor = 'rival';
+          recordFrame();
+        }
+        rivalClock = 0;
+      }
+    } else rivalClock = 0;
+    sync();
+  }
+
   sync();
   return {
     shoot, reset, setAim,
-    snapshot: match.snapshot,
-    tick(delta: number) { if (!document.hidden) match.step(delta); sync(); },
+    snapshot, tick, replay,
+    refresh() { previousState = ''; sync(); },
+    replayCount: () => replayedShots,
+    loadLevel(next: Level, asPreview = false) {
+      stopReplay();
+      cancelDrag();
+      level = next;
+      paused = false;
+      preview = asPreview;
+      lastReplay = [];
+      recording = [];
+      rivalClock = 0;
+      renderedActor = null;
+      match.setLevel(next);
+      stage.setLevel(next);
+      setAim(next.rule === 'bank' ? -51 : -6, next.rule === 'pocket' ? 0.4 : 0.58, false);
+      sync();
+    },
+    setPaused(value: boolean) { if (value) { cancelDrag(); stopReplay(); } paused = value; sync(); },
+    setSkin(color: number, style: number, finish = 0, secondary = 0xc8e5dd) { equipped = { color, style, finish, secondary }; renderedActor = null; sync(); },
+    lineUp() {
+      if (paused || preview || replaying || match.snapshot().active || match.snapshot().turn !== 'player') return;
+      const index = match.snapshot().remaining[0];
+      if (index === undefined) return;
+      const target = match.bodies[index].position;
+      const home = match.bodies[0].position;
+      let heading = Math.atan2(target.x - home.x, home.z - target.z) * 180 / Math.PI;
+      if (level?.rule === 'bank') {
+        const rail = level.barriers.find((barrier) => barrier.bank && barrier.x < 0);
+        if (rail) {
+          const reflectionLine = rail.x + rail.width / 2 + level.layout[0].radius;
+          const reflectedDistance = home.x - reflectionLine + (target.x - reflectionLine) / 0.78;
+          heading = Math.atan2(-reflectedDistance, home.z - target.z) * 180 / Math.PI;
+        }
+      }
+      setAim(heading, level?.rule === 'pocket' ? 0.4 : level?.rule === 'bank' ? 0.72 : 0.58);
+      stage.setView('aim');
+    },
     setSound(enabled: boolean) { soundEnabled = enabled; if (enabled) unlockAudio(); },
-    setGuide(enabled: boolean) { aiming = enabled; },
+    setGuide(enabled: boolean) { assists = enabled; },
   };
 }
+
+export type Game = ReturnType<typeof createGame>;

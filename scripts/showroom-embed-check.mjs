@@ -1,0 +1,44 @@
+import { chromium } from '@playwright/test';
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+
+const browser = await chromium.launch({ channel: 'msedge', headless: true });
+const output = path.resolve('public/devlog');
+await mkdir(output, { recursive: true });
+const errors = [];
+try {
+  const page = await browser.newPage({ viewport: { width: 1500, height: 960 }, deviceScaleFactor: 1 });
+  page.on('pageerror', (error) => errors.push(error.message));
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.goto('http://127.0.0.1:5177/?lang=en&debug=1&cinematics=0&scoutTheme=dark', { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => window.__bely?.ready, null, { timeout: 90000 });
+  await page.locator('#loading').waitFor({ state: 'hidden' });
+  await page.evaluate(() => window.__bely.shoot(-6, 0.6));
+  const before = await page.evaluate(() => ({ origin: performance.timeOrigin, url: location.href, match: window.__bely.state().match }));
+  await page.locator('#open-collection').click();
+  const frame = page.frameLocator('#showroom-overlay iframe');
+  await frame.locator('#studio-loading').waitFor({ state: 'hidden', timeout: 45000 });
+  assert.equal(page.url(), before.url);
+  assert.equal(await page.evaluate(() => window.__bely.state().match.paused), true);
+  await frame.locator('[data-pose="low"]').click();
+  await page.screenshot({ path: path.join(output, '06-showroom-overlay.png') });
+  await frame.locator('#back-to-game').click();
+  await page.locator('#showroom-overlay').waitFor({ state: 'hidden' });
+  const after = await page.evaluate(() => ({ origin: performance.timeOrigin, url: location.href, match: window.__bely.state().match }));
+  assert.equal(after.origin, before.origin, 'showroom must not reload the game document');
+  assert.equal(after.url, before.url);
+  assert.equal(after.match.shots, before.match.shots);
+  assert.equal(after.match.levelId, before.match.levelId);
+  assert.equal(after.match.paused, false);
+  await page.locator('#open-journey').click();
+  await page.locator('[data-tab="collection"]').click();
+  const nested = page.frameLocator('#showroom-overlay iframe');
+  await nested.locator('#studio-loading').waitFor({ state: 'hidden', timeout: 45000 });
+  await nested.locator('#back-to-game').click();
+  assert.equal(await page.locator('#journey-dialog').isVisible(), true);
+  assert.equal(await page.evaluate(() => window.__bely.state().match.paused), true);
+  assert.deepEqual(errors, []);
+  await writeFile(path.join(output, '06-showroom-state-check.json'), JSON.stringify({ before, after, nestedMenuPreserved: true, errors }, null, 2));
+  console.log('PASS: studio modal, unchanged URL/document/match, resumed play, and nested journey state preserved.');
+} finally { await browser.close(); }
