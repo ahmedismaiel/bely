@@ -4,10 +4,10 @@ A browser-first Egyptian marble game and experimental playground, built with Thr
 
 ## Public Project
 
-- Game: https://ahmedismaiel.github.io/bely-marble-game/
-- Arabic game: https://ahmedismaiel.github.io/bely-marble-game/?lang=ar&debug=1
-- Photo dev log: https://ahmedismaiel.github.io/bely-marble-game/devlog.html
-- Repository: https://github.com/ahmedismaiel/bely-marble-game
+- Game: https://ahmedismaiel.github.io/bely/
+- Arabic game: https://ahmedismaiel.github.io/bely/?lang=ar&debug=1
+- Photo dev log: https://ahmedismaiel.github.io/bely/devlog.html
+- Repository: https://github.com/ahmedismaiel/bely
 
 GitHub Actions publishes the game, marble studio, and bilingual dev log to Pages on updates to `master` or `main`.
 
